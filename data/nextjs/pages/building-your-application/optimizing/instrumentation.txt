@@ -1,0 +1,339 @@
+Skip to content
+Showcase
+Docs
+Blog
+Templates
+Enterprise
+Search documentation...
+Feedback
+Learn
+
+Using App Router
+
+Features available in /app
+
+Using Stable Version
+
+v15.0.2
+
+Getting Started
+Installation
+Project Structure
+Building Your Application
+Routing
+Defining Routes
+Pages
+Layouts and Templates
+Linking and Navigating
+Error Handling
+Loading UI and Streaming
+Redirecting
+Route Groups
+Project Organization
+Dynamic Routes
+Parallel Routes
+Intercepting Routes
+Route Handlers
+Middleware
+Internationalization
+Data Fetching
+Data Fetching and Caching
+Server Actions and Mutations
+Incremental Static Regeneration (ISR)
+Rendering
+Server Components
+Client Components
+Composition Patterns
+Partial Prerendering
+Runtimes
+Caching
+Styling
+CSS
+Tailwind CSS
+Sass
+CSS-in-JS
+Optimizing
+Images
+Videos
+Fonts
+Metadata
+Scripts
+Package Bundling
+Lazy Loading
+Analytics
+Instrumentation
+OpenTelemetry
+Static Assets
+Third Party Libraries
+Memory Usage
+Configuring
+TypeScript
+ESLint
+Environment Variables
+Absolute Imports and Module Path Aliases
+MDX
+src Directory
+Custom Server
+Draft Mode
+Content Security Policy
+Debugging
+Progressive Web Applications (PWA)
+Testing
+Vitest
+Jest
+Playwright
+Cypress
+Authentication
+Deploying
+Production Checklist
+Static Exports
+Multi-Zones
+Upgrading
+Codemods
+Version 15
+Version 14
+App Router Migration
+Migrating from Create React App
+Migrating from Vite
+Examples
+API Reference
+Directives
+use cache
+use client
+use server
+Components
+Font
+<Form>
+<Image>
+<Link>
+<Script>
+File Conventions
+default.js
+error.js
+instrumentation.js
+layout.js
+loading.js
+mdx-components.js
+middleware.js
+not-found.js
+page.js
+route.js
+Route Segment Config
+template.js
+Metadata Files
+favicon, icon, and apple-icon
+manifest.json
+opengraph-image and twitter-image
+robots.txt
+sitemap.xml
+Functions
+cacheTag
+connection
+cookies
+draftMode
+fetch
+generateImageMetadata
+generateMetadata
+generateSitemaps
+generateStaticParams
+generateViewport
+headers
+ImageResponse
+NextRequest
+NextResponse
+notFound
+permanentRedirect
+redirect
+revalidatePath
+revalidateTag
+unstable_after
+unstable_rethrow
+useParams
+usePathname
+useReportWebVitals
+useRouter
+useSearchParams
+useSelectedLayoutSegment
+useSelectedLayoutSegments
+userAgent
+next.config.js Options
+appDir
+assetPrefix
+basePath
+cacheLife
+compress
+crossOrigin
+cssChunking
+devIndicators
+distDir
+dynamicIO
+env
+eslint
+expireTime
+exportPathMap
+generateBuildId
+generateEtags
+headers
+httpAgentOptions
+images
+cacheHandler
+logging
+mdxRs
+onDemandEntries
+optimizePackageImports
+output
+pageExtensions
+poweredByHeader
+ppr
+productionBrowserSourceMaps
+reactCompiler
+reactMaxHeadersLength
+reactStrictMode
+redirects
+rewrites
+sassOptions
+serverActions
+serverComponentsHmrCache
+serverExternalPackages
+staleTimes
+staticGeneration*
+trailingSlash
+transpilePackages
+turbo
+typedRoutes
+typescript
+urlImports
+useLightningcss
+webpack
+webVitalsAttribution
+CLI
+create-next-app
+next CLI
+Edge Runtime
+Legacy APIs
+unstable_cache
+unstable_noStore
+Architecture
+Accessibility
+Fast Refresh
+Next.js Compiler
+Supported Browsers
+Turbopack
+Community
+Contribution Guide
+On this page
+Convention
+Examples
+Importing files with side effects
+Importing runtime-specific code
+Managed Next.js (Vercel)
+Scroll to top
+Building Your Application
+Optimizing
+Instrumentation
+Instrumentation
+
+Instrumentation is the process of using code to integrate monitoring and logging tools into your application. This allows you to track the performance and behavior of your application, and to debug issues in production.
+
+Convention
+
+To set up instrumentation, create instrumentation.ts|js file in the root directory of your project (or inside the src folder if using one).
+
+Then, export a register function in the file. This function will be called once when a new Next.js server instance is initiated.
+
+For example, to use Next.js with OpenTelemetry
+ and @vercel/otel
+:
+
+instrumentation.ts
+TypeScript
+JavaScript
+TypeScript
+import { registerOTel } from '@vercel/otel'
+ 
+export function register() {
+  registerOTel('next-app')
+}
+
+See the Next.js with OpenTelemetry example
+ for a complete implementation.
+
+Good to know:
+
+The instrumentation file should be in the root of your project and not inside the app or pages directory. If you're using the src folder, then place the file inside src alongside pages and app.
+If you use the pageExtensions config option to add a suffix, you will also need to update the instrumentation filename to match.
+Examples
+Importing files with side effects
+
+Sometimes, it may be useful to import a file in your code because of the side effects it will cause. For example, you might import a file that defines a set of global variables, but never explicitly use the imported file in your code. You would still have access to the global variables the package has declared.
+
+We recommend importing files using JavaScript import syntax within your register function. The following example demonstrates a basic usage of import in a register function:
+
+instrumentation.ts
+TypeScript
+JavaScript
+TypeScript
+export async function register() {
+  await import('package-with-side-effect')
+}
+
+Good to know:
+
+We recommend importing the file from within the register function, rather than at the top of the file. By doing this, you can colocate all of your side effects in one place in your code, and avoid any unintended consequences from importing globally at the top of the file.
+
+Importing runtime-specific code
+
+Next.js calls register in all environments, so it's important to conditionally import any code that doesn't support specific runtimes (e.g. Edge or Node.js). You can use the NEXT_RUNTIME environment variable to get the current environment:
+
+instrumentation.ts
+TypeScript
+JavaScript
+TypeScript
+export async function register() {
+  if (process.env.NEXT_RUNTIME === 'nodejs') {
+    await import('./instrumentation-node')
+  }
+ 
+  if (process.env.NEXT_RUNTIME === 'edge') {
+    await import('./instrumentation-edge')
+  }
+}
+Previous
+Lazy Loading
+Next
+OpenTelemetry
+
+Was this helpful?
+
+supported.
+Send
+Resources
+Docs
+Learn
+Showcase
+Blog
+Analytics
+Next.js Conf
+Previews
+More
+Next.js Commerce
+Contact Sales
+GitHub
+Releases
+Telemetry
+Governance
+About Vercel
+Next.js + Vercel
+Open Source Software
+GitHub
+X
+Legal
+Privacy Policy
+Cookie Preferences
+Subscribe to our newsletter
+
+Stay updated on new releases and features, guides, and case studies.
+
+Subscribe
+
+© 2024 Vercel, Inc.

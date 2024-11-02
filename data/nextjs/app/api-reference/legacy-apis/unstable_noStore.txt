@@ -1,0 +1,304 @@
+Skip to content
+Showcase
+Docs
+Blog
+Templates
+Enterprise
+Search documentation...
+Feedback
+Learn
+
+Using App Router
+
+Features available in /app
+
+Using Stable Version
+
+v15.0.2
+
+Getting Started
+Installation
+Project Structure
+Building Your Application
+Routing
+Defining Routes
+Pages
+Layouts and Templates
+Linking and Navigating
+Error Handling
+Loading UI and Streaming
+Redirecting
+Route Groups
+Project Organization
+Dynamic Routes
+Parallel Routes
+Intercepting Routes
+Route Handlers
+Middleware
+Internationalization
+Data Fetching
+Data Fetching and Caching
+Server Actions and Mutations
+Incremental Static Regeneration (ISR)
+Rendering
+Server Components
+Client Components
+Composition Patterns
+Partial Prerendering
+Runtimes
+Caching
+Styling
+CSS
+Tailwind CSS
+Sass
+CSS-in-JS
+Optimizing
+Images
+Videos
+Fonts
+Metadata
+Scripts
+Package Bundling
+Lazy Loading
+Analytics
+Instrumentation
+OpenTelemetry
+Static Assets
+Third Party Libraries
+Memory Usage
+Configuring
+TypeScript
+ESLint
+Environment Variables
+Absolute Imports and Module Path Aliases
+MDX
+src Directory
+Custom Server
+Draft Mode
+Content Security Policy
+Debugging
+Progressive Web Applications (PWA)
+Testing
+Vitest
+Jest
+Playwright
+Cypress
+Authentication
+Deploying
+Production Checklist
+Static Exports
+Multi-Zones
+Upgrading
+Codemods
+Version 15
+Version 14
+App Router Migration
+Migrating from Create React App
+Migrating from Vite
+Examples
+API Reference
+Directives
+use cache
+use client
+use server
+Components
+Font
+<Form>
+<Image>
+<Link>
+<Script>
+File Conventions
+default.js
+error.js
+instrumentation.js
+layout.js
+loading.js
+mdx-components.js
+middleware.js
+not-found.js
+page.js
+route.js
+Route Segment Config
+template.js
+Metadata Files
+favicon, icon, and apple-icon
+manifest.json
+opengraph-image and twitter-image
+robots.txt
+sitemap.xml
+Functions
+cacheTag
+connection
+cookies
+draftMode
+fetch
+generateImageMetadata
+generateMetadata
+generateSitemaps
+generateStaticParams
+generateViewport
+headers
+ImageResponse
+NextRequest
+NextResponse
+notFound
+permanentRedirect
+redirect
+revalidatePath
+revalidateTag
+unstable_after
+unstable_rethrow
+useParams
+usePathname
+useReportWebVitals
+useRouter
+useSearchParams
+useSelectedLayoutSegment
+useSelectedLayoutSegments
+userAgent
+next.config.js Options
+appDir
+assetPrefix
+basePath
+cacheLife
+compress
+crossOrigin
+cssChunking
+devIndicators
+distDir
+dynamicIO
+env
+eslint
+expireTime
+exportPathMap
+generateBuildId
+generateEtags
+headers
+httpAgentOptions
+images
+cacheHandler
+logging
+mdxRs
+onDemandEntries
+optimizePackageImports
+output
+pageExtensions
+poweredByHeader
+ppr
+productionBrowserSourceMaps
+reactCompiler
+reactMaxHeadersLength
+reactStrictMode
+redirects
+rewrites
+sassOptions
+serverActions
+serverComponentsHmrCache
+serverExternalPackages
+staleTimes
+staticGeneration*
+trailingSlash
+transpilePackages
+turbo
+typedRoutes
+typescript
+urlImports
+useLightningcss
+webpack
+webVitalsAttribution
+CLI
+create-next-app
+next CLI
+Edge Runtime
+Legacy APIs
+unstable_cache
+unstable_noStore
+Architecture
+Accessibility
+Fast Refresh
+Next.js Compiler
+Supported Browsers
+Turbopack
+Community
+Contribution Guide
+On this page
+Usage
+Version History
+Managed Next.js (Vercel)
+Scroll to top
+API Reference
+Legacy APIs
+unstable_noStore
+unstable_noStore
+This is a legacy API and no longer recommended. It's still supported for backward compatibility.
+
+In version 15, we recommend using connection instead of unstable_noStore.
+
+unstable_noStore can be used to declaratively opt out of static rendering and indicate a particular component should not be cached.
+
+import { unstable_noStore as noStore } from 'next/cache';
+ 
+export default async function ServerComponent() {
+  noStore();
+  const result = await db.query(...);
+  ...
+}
+
+Good to know:
+
+unstable_noStore is equivalent to cache: 'no-store' on a fetch
+unstable_noStore is preferred over export const dynamic = 'force-dynamic' as it is more granular and can be used on a per-component basis
+Using unstable_noStore inside unstable_cache will not opt out of static generation. Instead, it will defer to the cache configuration to determine whether to cache the result or not.
+Usage
+
+If you prefer not to pass additional options to fetch, like cache: 'no-store', next: { revalidate: 0 } or in cases where fetch is not available, you can use noStore() as a replacement for all of these use cases.
+
+import { unstable_noStore as noStore } from 'next/cache';
+ 
+export default async function ServerComponent() {
+  noStore();
+  const result = await db.query(...);
+  ...
+}
+Version History
+Version	Changes
+v14.0.0	unstable_noStore introduced.
+Previous
+unstable_cache
+Next
+Pages Router
+
+Was this helpful?
+
+supported.
+Send
+Resources
+Docs
+Learn
+Showcase
+Blog
+Analytics
+Next.js Conf
+Previews
+More
+Next.js Commerce
+Contact Sales
+GitHub
+Releases
+Telemetry
+Governance
+About Vercel
+Next.js + Vercel
+Open Source Software
+GitHub
+X
+Legal
+Privacy Policy
+Cookie Preferences
+Subscribe to our newsletter
+
+Stay updated on new releases and features, guides, and case studies.
+
+Subscribe
+
+© 2024 Vercel, Inc.

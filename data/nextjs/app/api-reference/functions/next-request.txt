@@ -1,0 +1,354 @@
+Skip to content
+Showcase
+Docs
+Blog
+Templates
+Enterprise
+Search documentation...
+Feedback
+Learn
+
+Using App Router
+
+Features available in /app
+
+Using Stable Version
+
+v15.0.2
+
+Getting Started
+Installation
+Project Structure
+Building Your Application
+Routing
+Defining Routes
+Pages
+Layouts and Templates
+Linking and Navigating
+Error Handling
+Loading UI and Streaming
+Redirecting
+Route Groups
+Project Organization
+Dynamic Routes
+Parallel Routes
+Intercepting Routes
+Route Handlers
+Middleware
+Internationalization
+Data Fetching
+Data Fetching and Caching
+Server Actions and Mutations
+Incremental Static Regeneration (ISR)
+Rendering
+Server Components
+Client Components
+Composition Patterns
+Partial Prerendering
+Runtimes
+Caching
+Styling
+CSS
+Tailwind CSS
+Sass
+CSS-in-JS
+Optimizing
+Images
+Videos
+Fonts
+Metadata
+Scripts
+Package Bundling
+Lazy Loading
+Analytics
+Instrumentation
+OpenTelemetry
+Static Assets
+Third Party Libraries
+Memory Usage
+Configuring
+TypeScript
+ESLint
+Environment Variables
+Absolute Imports and Module Path Aliases
+MDX
+src Directory
+Custom Server
+Draft Mode
+Content Security Policy
+Debugging
+Progressive Web Applications (PWA)
+Testing
+Vitest
+Jest
+Playwright
+Cypress
+Authentication
+Deploying
+Production Checklist
+Static Exports
+Multi-Zones
+Upgrading
+Codemods
+Version 15
+Version 14
+App Router Migration
+Migrating from Create React App
+Migrating from Vite
+Examples
+API Reference
+Directives
+use cache
+use client
+use server
+Components
+Font
+<Form>
+<Image>
+<Link>
+<Script>
+File Conventions
+default.js
+error.js
+instrumentation.js
+layout.js
+loading.js
+mdx-components.js
+middleware.js
+not-found.js
+page.js
+route.js
+Route Segment Config
+template.js
+Metadata Files
+favicon, icon, and apple-icon
+manifest.json
+opengraph-image and twitter-image
+robots.txt
+sitemap.xml
+Functions
+cacheTag
+connection
+cookies
+draftMode
+fetch
+generateImageMetadata
+generateMetadata
+generateSitemaps
+generateStaticParams
+generateViewport
+headers
+ImageResponse
+NextRequest
+NextResponse
+notFound
+permanentRedirect
+redirect
+revalidatePath
+revalidateTag
+unstable_after
+unstable_rethrow
+useParams
+usePathname
+useReportWebVitals
+useRouter
+useSearchParams
+useSelectedLayoutSegment
+useSelectedLayoutSegments
+userAgent
+next.config.js Options
+appDir
+assetPrefix
+basePath
+cacheLife
+compress
+crossOrigin
+cssChunking
+devIndicators
+distDir
+dynamicIO
+env
+eslint
+expireTime
+exportPathMap
+generateBuildId
+generateEtags
+headers
+httpAgentOptions
+images
+cacheHandler
+logging
+mdxRs
+onDemandEntries
+optimizePackageImports
+output
+pageExtensions
+poweredByHeader
+ppr
+productionBrowserSourceMaps
+reactCompiler
+reactMaxHeadersLength
+reactStrictMode
+redirects
+rewrites
+sassOptions
+serverActions
+serverComponentsHmrCache
+serverExternalPackages
+staleTimes
+staticGeneration*
+trailingSlash
+transpilePackages
+turbo
+typedRoutes
+typescript
+urlImports
+useLightningcss
+webpack
+webVitalsAttribution
+CLI
+create-next-app
+next CLI
+Edge Runtime
+Legacy APIs
+unstable_cache
+unstable_noStore
+Architecture
+Accessibility
+Fast Refresh
+Next.js Compiler
+Supported Browsers
+Turbopack
+Community
+Contribution Guide
+On this page
+cookies
+set(name, value)
+get(name)
+getAll()
+delete(name)
+has(name)
+clear()
+nextUrl
+Version History
+Managed Next.js (Vercel)
+Scroll to top
+API Reference
+Functions
+NextRequest
+NextRequest
+
+NextRequest extends the Web Request API
+ with additional convenience methods.
+
+cookies
+
+Read or mutate the Set-Cookie
+ header of the request.
+
+set(name, value)
+
+Given a name, set a cookie with the given value on the request.
+
+// Given incoming request /home
+// Set a cookie to hide the banner
+// request will have a `Set-Cookie:show-banner=false;path=/home` header
+request.cookies.set('show-banner', 'false')
+get(name)
+
+Given a cookie name, return the value of the cookie. If the cookie is not found, undefined is returned. If multiple cookies are found, the first one is returned.
+
+// Given incoming request /home
+// { name: 'show-banner', value: 'false', Path: '/home' }
+request.cookies.get('show-banner')
+getAll()
+
+Given a cookie name, return the values of the cookie. If no name is given, return all cookies on the request.
+
+// Given incoming request /home
+// [
+//   { name: 'experiments', value: 'new-pricing-page', Path: '/home' },
+//   { name: 'experiments', value: 'winter-launch', Path: '/home' },
+// ]
+request.cookies.getAll('experiments')
+// Alternatively, get all cookies for the request
+request.cookies.getAll()
+delete(name)
+
+Given a cookie name, delete the cookie from the request.
+
+// Returns true for deleted, false is nothing is deleted
+request.cookies.delete('experiments')
+has(name)
+
+Given a cookie name, return true if the cookie exists on the request.
+
+// Returns true if cookie exists, false if it does not
+request.cookies.has('experiments')
+clear()
+
+Remove the Set-Cookie header from the request.
+
+request.cookies.clear()
+nextUrl
+
+Extends the native URL
+ API with additional convenience methods, including Next.js specific properties.
+
+// Given a request to /home, pathname is /home
+request.nextUrl.pathname
+// Given a request to /home?name=lee, searchParams is { 'name': 'lee' }
+request.nextUrl.searchParams
+
+The following options are available:
+
+Property	Type	Description
+basePath	string	The base path of the URL.
+buildId	string | undefined	The build identifier of the Next.js application. Can be customized.
+pathname	string	The pathname of the URL.
+searchParams	Object	The search parameters of the URL.
+
+Note: The internationalization properties from the Pages Router are not available for usage in the App Router. Learn more about internationalization with the App Router.
+
+Version History
+Version	Changes
+v15.0.0	ip and geo removed.
+Previous
+ImageResponse
+Next
+NextResponse
+
+Was this helpful?
+
+supported.
+Send
+Resources
+Docs
+Learn
+Showcase
+Blog
+Analytics
+Next.js Conf
+Previews
+More
+Next.js Commerce
+Contact Sales
+GitHub
+Releases
+Telemetry
+Governance
+About Vercel
+Next.js + Vercel
+Open Source Software
+GitHub
+X
+Legal
+Privacy Policy
+Cookie Preferences
+Subscribe to our newsletter
+
+Stay updated on new releases and features, guides, and case studies.
+
+Subscribe
+
+© 2024 Vercel, Inc.

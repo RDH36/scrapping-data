@@ -1,0 +1,319 @@
+Skip to content
+Showcase
+Docs
+Blog
+Templates
+Enterprise
+Search documentation...
+Feedback
+Learn
+
+Using App Router
+
+Features available in /app
+
+Using Stable Version
+
+v15.0.2
+
+Getting Started
+Installation
+Project Structure
+Building Your Application
+Routing
+Defining Routes
+Pages
+Layouts and Templates
+Linking and Navigating
+Error Handling
+Loading UI and Streaming
+Redirecting
+Route Groups
+Project Organization
+Dynamic Routes
+Parallel Routes
+Intercepting Routes
+Route Handlers
+Middleware
+Internationalization
+Data Fetching
+Data Fetching and Caching
+Server Actions and Mutations
+Incremental Static Regeneration (ISR)
+Rendering
+Server Components
+Client Components
+Composition Patterns
+Partial Prerendering
+Runtimes
+Caching
+Styling
+CSS
+Tailwind CSS
+Sass
+CSS-in-JS
+Optimizing
+Images
+Videos
+Fonts
+Metadata
+Scripts
+Package Bundling
+Lazy Loading
+Analytics
+Instrumentation
+OpenTelemetry
+Static Assets
+Third Party Libraries
+Memory Usage
+Configuring
+TypeScript
+ESLint
+Environment Variables
+Absolute Imports and Module Path Aliases
+MDX
+src Directory
+Custom Server
+Draft Mode
+Content Security Policy
+Debugging
+Progressive Web Applications (PWA)
+Testing
+Vitest
+Jest
+Playwright
+Cypress
+Authentication
+Deploying
+Production Checklist
+Static Exports
+Multi-Zones
+Upgrading
+Codemods
+Version 15
+Version 14
+App Router Migration
+Migrating from Create React App
+Migrating from Vite
+Examples
+API Reference
+Directives
+use cache
+use client
+use server
+Components
+Font
+<Form>
+<Image>
+<Link>
+<Script>
+File Conventions
+default.js
+error.js
+instrumentation.js
+layout.js
+loading.js
+mdx-components.js
+middleware.js
+not-found.js
+page.js
+route.js
+Route Segment Config
+template.js
+Metadata Files
+favicon, icon, and apple-icon
+manifest.json
+opengraph-image and twitter-image
+robots.txt
+sitemap.xml
+Functions
+cacheTag
+connection
+cookies
+draftMode
+fetch
+generateImageMetadata
+generateMetadata
+generateSitemaps
+generateStaticParams
+generateViewport
+headers
+ImageResponse
+NextRequest
+NextResponse
+notFound
+permanentRedirect
+redirect
+revalidatePath
+revalidateTag
+unstable_after
+unstable_rethrow
+useParams
+usePathname
+useReportWebVitals
+useRouter
+useSearchParams
+useSelectedLayoutSegment
+useSelectedLayoutSegments
+userAgent
+next.config.js Options
+appDir
+assetPrefix
+basePath
+cacheLife
+compress
+crossOrigin
+cssChunking
+devIndicators
+distDir
+dynamicIO
+env
+eslint
+expireTime
+exportPathMap
+generateBuildId
+generateEtags
+headers
+httpAgentOptions
+images
+cacheHandler
+logging
+mdxRs
+onDemandEntries
+optimizePackageImports
+output
+pageExtensions
+poweredByHeader
+ppr
+productionBrowserSourceMaps
+reactCompiler
+reactMaxHeadersLength
+reactStrictMode
+redirects
+rewrites
+sassOptions
+serverActions
+serverComponentsHmrCache
+serverExternalPackages
+staleTimes
+staticGeneration*
+trailingSlash
+transpilePackages
+turbo
+typedRoutes
+typescript
+urlImports
+useLightningcss
+webpack
+webVitalsAttribution
+CLI
+create-next-app
+next CLI
+Edge Runtime
+Legacy APIs
+unstable_cache
+unstable_noStore
+Architecture
+Accessibility
+Fast Refresh
+Next.js Compiler
+Supported Browsers
+Turbopack
+Community
+Contribution Guide
+On this page
+Convention
+Examples
+Modals
+Next Steps
+Managed Next.js (Vercel)
+Scroll to top
+Building Your Application
+Routing
+Intercepting Routes
+Intercepting Routes
+
+Intercepting routes allows you to load a route from another part of your application within the current layout. This routing paradigm can be useful when you want to display the content of a route without the user switching to a different context.
+
+For example, when clicking on a photo in a feed, you can display the photo in a modal, overlaying the feed. In this case, Next.js intercepts the /photo/123 route, masks the URL, and overlays it over /feed.
+
+However, when navigating to the photo by clicking a shareable URL or by refreshing the page, the entire photo page should render instead of the modal. No route interception should occur.
+
+Convention
+
+Intercepting routes can be defined with the (..) convention, which is similar to relative path convention ../ but for segments.
+
+You can use:
+
+(.) to match segments on the same level
+(..) to match segments one level above
+(..)(..) to match segments two levels above
+(...) to match segments from the root app directory
+
+For example, you can intercept the photo segment from within the feed segment by creating a (..)photo directory.
+
+Note that the (..) convention is based on route segments, not the file-system.
+
+Examples
+Modals
+
+Intercepting Routes can be used together with Parallel Routes to create modals. This allows you to solve common challenges when building modals, such as:
+
+Making the modal content shareable through a URL.
+Preserving context when the page is refreshed, instead of closing the modal.
+Closing the modal on backwards navigation rather than going to the previous route.
+Reopening the modal on forwards navigation.
+
+Consider the following UI pattern, where a user can open a photo modal from a gallery using client-side navigation, or navigate to the photo page directly from a shareable URL:
+
+In the above example, the path to the photo segment can use the (..) matcher since @modal is a slot and not a segment. This means that the photo route is only one segment level higher, despite being two file-system levels higher.
+
+See the Parallel Routes documentation for a step-by-step example, or see our image gallery example
+.
+
+Good to know:
+
+Other examples could include opening a login modal in a top navbar while also having a dedicated /login page, or opening a shopping cart in a side modal.
+Next Steps
+Learn how to use modals with Intercepted and Parallel Routes.
+Parallel Routes
+Simultaneously render one or more pages in the same view that can be navigated independently. A pattern for highly dynamic applications.
+Previous
+Parallel Routes
+Next
+Route Handlers
+
+Was this helpful?
+
+supported.
+Send
+Resources
+Docs
+Learn
+Showcase
+Blog
+Analytics
+Next.js Conf
+Previews
+More
+Next.js Commerce
+Contact Sales
+GitHub
+Releases
+Telemetry
+Governance
+About Vercel
+Next.js + Vercel
+Open Source Software
+GitHub
+X
+Legal
+Privacy Policy
+Cookie Preferences
+Subscribe to our newsletter
+
+Stay updated on new releases and features, guides, and case studies.
+
+Subscribe
+
+© 2024 Vercel, Inc.

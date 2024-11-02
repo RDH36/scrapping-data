@@ -1,0 +1,463 @@
+Skip to content
+Showcase
+Docs
+Blog
+Templates
+Enterprise
+Search documentation...
+Feedback
+Learn
+
+Using App Router
+
+Features available in /app
+
+Using Stable Version
+
+v15.0.2
+
+Getting Started
+Installation
+Project Structure
+Building Your Application
+Routing
+Defining Routes
+Pages
+Layouts and Templates
+Linking and Navigating
+Error Handling
+Loading UI and Streaming
+Redirecting
+Route Groups
+Project Organization
+Dynamic Routes
+Parallel Routes
+Intercepting Routes
+Route Handlers
+Middleware
+Internationalization
+Data Fetching
+Data Fetching and Caching
+Server Actions and Mutations
+Incremental Static Regeneration (ISR)
+Rendering
+Server Components
+Client Components
+Composition Patterns
+Partial Prerendering
+Runtimes
+Caching
+Styling
+CSS
+Tailwind CSS
+Sass
+CSS-in-JS
+Optimizing
+Images
+Videos
+Fonts
+Metadata
+Scripts
+Package Bundling
+Lazy Loading
+Analytics
+Instrumentation
+OpenTelemetry
+Static Assets
+Third Party Libraries
+Memory Usage
+Configuring
+TypeScript
+ESLint
+Environment Variables
+Absolute Imports and Module Path Aliases
+MDX
+src Directory
+Custom Server
+Draft Mode
+Content Security Policy
+Debugging
+Progressive Web Applications (PWA)
+Testing
+Vitest
+Jest
+Playwright
+Cypress
+Authentication
+Deploying
+Production Checklist
+Static Exports
+Multi-Zones
+Upgrading
+Codemods
+Version 15
+Version 14
+App Router Migration
+Migrating from Create React App
+Migrating from Vite
+Examples
+API Reference
+Directives
+use cache
+use client
+use server
+Components
+Font
+<Form>
+<Image>
+<Link>
+<Script>
+File Conventions
+default.js
+error.js
+instrumentation.js
+layout.js
+loading.js
+mdx-components.js
+middleware.js
+not-found.js
+page.js
+route.js
+Route Segment Config
+template.js
+Metadata Files
+favicon, icon, and apple-icon
+manifest.json
+opengraph-image and twitter-image
+robots.txt
+sitemap.xml
+Functions
+cacheTag
+connection
+cookies
+draftMode
+fetch
+generateImageMetadata
+generateMetadata
+generateSitemaps
+generateStaticParams
+generateViewport
+headers
+ImageResponse
+NextRequest
+NextResponse
+notFound
+permanentRedirect
+redirect
+revalidatePath
+revalidateTag
+unstable_after
+unstable_rethrow
+useParams
+usePathname
+useReportWebVitals
+useRouter
+useSearchParams
+useSelectedLayoutSegment
+useSelectedLayoutSegments
+userAgent
+next.config.js Options
+appDir
+assetPrefix
+basePath
+cacheLife
+compress
+crossOrigin
+cssChunking
+devIndicators
+distDir
+dynamicIO
+env
+eslint
+expireTime
+exportPathMap
+generateBuildId
+generateEtags
+headers
+httpAgentOptions
+images
+cacheHandler
+logging
+mdxRs
+onDemandEntries
+optimizePackageImports
+output
+pageExtensions
+poweredByHeader
+ppr
+productionBrowserSourceMaps
+reactCompiler
+reactMaxHeadersLength
+reactStrictMode
+redirects
+rewrites
+sassOptions
+serverActions
+serverComponentsHmrCache
+serverExternalPackages
+staleTimes
+staticGeneration*
+trailingSlash
+transpilePackages
+turbo
+typedRoutes
+typescript
+urlImports
+useLightningcss
+webpack
+webVitalsAttribution
+CLI
+create-next-app
+next CLI
+Edge Runtime
+Legacy APIs
+unstable_cache
+unstable_noStore
+Architecture
+Accessibility
+Fast Refresh
+Next.js Compiler
+Supported Browsers
+Turbopack
+Community
+Contribution Guide
+On this page
+Reference
+Methods
+Options
+Good to know
+Examples
+Getting a cookie
+Getting all cookies
+Setting a cookie
+Checking if a cookie exists
+Deleting cookies
+Version History
+Managed Next.js (Vercel)
+Scroll to top
+API Reference
+Functions
+cookies
+cookies
+
+cookies is an async function that allows you to read the HTTP incoming request cookies in Server Component, and read/write outgoing request cookies in Server Actions or Route Handlers.
+
+app/page.tsx
+TypeScript
+JavaScript
+TypeScript
+import { cookies } from 'next/headers'
+ 
+export default async function Page() {
+  const cookieStore = await cookies()
+  const theme = cookieStore.get('theme')
+  return '...'
+}
+Reference
+Methods
+
+The following methods are available:
+
+Method	Return Type	Description
+get('name')	Object	Accepts a cookie name and returns an object with the name and value.
+getAll()	Array of objects	Returns a list of all the cookies with a matching name.
+has('name')	Boolean	Accepts a cookie name and returns a boolean based on if the cookie exists.
+set(name, value, options)	-	Accepts a cookie name, value, and options and sets the outgoing request cookie.
+delete(name)	-	Accepts a cookie name and deletes the cookie.
+clear()	-	Deletes all cookies.
+toString()	String	Returns a string representation of the cookies.
+Options
+
+When setting a cookie, the following properties from the options object are supported:
+
+Option	Type	Description
+name	String	Specifies the name of the cookie.
+value	String	Specifies the value to be stored in the cookie.
+expires	Date	Defines the exact date when the cookie will expire.
+maxAge	Number	Sets the cookie’s lifespan in seconds.
+domain	String	Specifies the domain where the cookie is available.
+path	String	Limits the cookie's scope to a specific path within the domain.
+secure	Boolean,	Ensures the cookie is sent only over HTTPS connections for added security.
+httpOnly	Boolean	Restricts the cookie to HTTP requests, preventing client-side access.
+sameSite	Boolean, 'lax', 'strict', 'none'	Controls the cookie's cross-site request behavior.
+priority	String ("low", "medium", "high")	Specifies the cookie's priority
+encode('value')	Function	Specifies a function that will be used to encode a cookie's value.
+partitioned	Boolean	Indicates whether the cookie is partitioned
+.
+
+To learn more about these options, see the MDN docs
+.
+
+Good to know
+cookies is an asynchronous function that returns a promise. You must use async/await or React's use
+ function to access cookies.
+In version 14 and earlier, cookies was a synchronous function. To help with backwards compatability, you can still access it synchronously in Next.js 15, but this behavior will be deprecated in the future.
+cookies is a Dynamic API whose returned values cannot be known ahead of time. Using it in a layout or page will opt a route into dynamic rendering.
+The .delete method can only be called:
+In a Server Action or Route Handler.
+If it belongs to the same domain from which .set is called. Additionally, the code must be executed on the same protocol (HTTP or HTTPS) as the cookie you want to delete.
+HTTP does not allow setting cookies after streaming starts, so you must use .set in a Server Action or Route Handler.
+Examples
+Getting a cookie
+
+You can use the cookies().get('name') method to get a single cookie:
+
+app/page.tsx
+TypeScript
+JavaScript
+TypeScript
+import { cookies } from 'next/headers'
+ 
+export default async function Page() {
+  const cookieStore = await cookies()
+  const theme = cookieStore.get('theme')
+  return '...'
+}
+Getting all cookies
+
+You can use the cookies().getAll() method to get all cookies with a matching name. If name is unspecified, it returns all the available cookies.
+
+app/page.tsx
+TypeScript
+JavaScript
+TypeScript
+import { cookies } from 'next/headers'
+ 
+export default async function Page() {
+  const cookieStore = await cookies()
+  return cookieStore.getAll().map((cookie) => (
+    <div key={cookie.name}>
+      <p>Name: {cookie.name}</p>
+      <p>Value: {cookie.value}</p>
+    </div>
+  ))
+}
+Setting a cookie
+
+You can use the cookies().set(name, value, options) method in a Server Action or Route Handler to set a cookie. The options object is optional.
+
+app/actions.ts
+TypeScript
+JavaScript
+TypeScript
+'use server'
+ 
+import { cookies } from 'next/headers'
+ 
+export async function create(data) {
+  const cookieStore = await cookies()
+ 
+  cookieStore().set('name', 'lee')
+  // or
+  cookieStore().set('name', 'lee', { secure: true })
+  // or
+  cookieStore().set({
+    name: 'name',
+    value: 'lee',
+    httpOnly: true,
+    path: '/',
+  })
+}
+Checking if a cookie exists
+
+You can use the cookies().has(name) method to check if a cookie exists:
+
+app/page.ts
+TypeScript
+JavaScript
+TypeScript
+import { cookies } from 'next/headers'
+ 
+export default async function Page() {
+  const cookieStore = await cookies()
+  const hasCookie = cookieStore.has('theme')
+  return '...'
+}
+Deleting cookies
+
+There are three ways you can delete a cookie.
+
+Using the delete() method:
+
+app/actions.ts
+TypeScript
+JavaScript
+TypeScript
+'use server'
+ 
+import { cookies } from 'next/headers'
+ 
+export async function delete(data) {
+  (await cookies()).delete('name')
+}
+
+Setting a new cookie with the same name and an empty value:
+
+app/actions.ts
+TypeScript
+JavaScript
+TypeScript
+'use server'
+ 
+import { cookies } from 'next/headers'
+ 
+export async function delete(data) {
+  (await cookies()).set('name', '')
+}
+
+Setting the maxAge to 0 will immediately expire a cookie. maxAge accepts a value in seconds.
+
+app/actions.ts
+TypeScript
+JavaScript
+TypeScript
+'use server'
+ 
+import { cookies } from 'next/headers'
+ 
+export async function delete(data) {
+  (await cookies()).set('name', 'value', { maxAge: 0 })
+}
+Version History
+Version	Changes
+v15.0.0-RC	cookies is now an async function. A codemod is available.
+v13.0.0	cookies introduced.
+Previous
+connection
+Next
+draftMode
+
+Was this helpful?
+
+supported.
+Send
+Resources
+Docs
+Learn
+Showcase
+Blog
+Analytics
+Next.js Conf
+Previews
+More
+Next.js Commerce
+Contact Sales
+GitHub
+Releases
+Telemetry
+Governance
+About Vercel
+Next.js + Vercel
+Open Source Software
+GitHub
+X
+Legal
+Privacy Policy
+Cookie Preferences
+Subscribe to our newsletter
+
+Stay updated on new releases and features, guides, and case studies.
+
+Subscribe
+
+© 2024 Vercel, Inc.

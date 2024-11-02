@@ -1,0 +1,528 @@
+Skip to content
+Showcase
+Docs
+Blog
+Templates
+Enterprise
+Search documentation...
+Feedback
+Learn
+
+Using App Router
+
+Features available in /app
+
+Using Stable Version
+
+v15.0.2
+
+Getting Started
+Installation
+Project Structure
+Building Your Application
+Routing
+Defining Routes
+Pages
+Layouts and Templates
+Linking and Navigating
+Error Handling
+Loading UI and Streaming
+Redirecting
+Route Groups
+Project Organization
+Dynamic Routes
+Parallel Routes
+Intercepting Routes
+Route Handlers
+Middleware
+Internationalization
+Data Fetching
+Data Fetching and Caching
+Server Actions and Mutations
+Incremental Static Regeneration (ISR)
+Rendering
+Server Components
+Client Components
+Composition Patterns
+Partial Prerendering
+Runtimes
+Caching
+Styling
+CSS
+Tailwind CSS
+Sass
+CSS-in-JS
+Optimizing
+Images
+Videos
+Fonts
+Metadata
+Scripts
+Package Bundling
+Lazy Loading
+Analytics
+Instrumentation
+OpenTelemetry
+Static Assets
+Third Party Libraries
+Memory Usage
+Configuring
+TypeScript
+ESLint
+Environment Variables
+Absolute Imports and Module Path Aliases
+MDX
+src Directory
+Custom Server
+Draft Mode
+Content Security Policy
+Debugging
+Progressive Web Applications (PWA)
+Testing
+Vitest
+Jest
+Playwright
+Cypress
+Authentication
+Deploying
+Production Checklist
+Static Exports
+Multi-Zones
+Upgrading
+Codemods
+Version 15
+Version 14
+App Router Migration
+Migrating from Create React App
+Migrating from Vite
+Examples
+API Reference
+Directives
+use cache
+use client
+use server
+Components
+Font
+<Form>
+<Image>
+<Link>
+<Script>
+File Conventions
+default.js
+error.js
+instrumentation.js
+layout.js
+loading.js
+mdx-components.js
+middleware.js
+not-found.js
+page.js
+route.js
+Route Segment Config
+template.js
+Metadata Files
+favicon, icon, and apple-icon
+manifest.json
+opengraph-image and twitter-image
+robots.txt
+sitemap.xml
+Functions
+cacheTag
+connection
+cookies
+draftMode
+fetch
+generateImageMetadata
+generateMetadata
+generateSitemaps
+generateStaticParams
+generateViewport
+headers
+ImageResponse
+NextRequest
+NextResponse
+notFound
+permanentRedirect
+redirect
+revalidatePath
+revalidateTag
+unstable_after
+unstable_rethrow
+useParams
+usePathname
+useReportWebVitals
+useRouter
+useSearchParams
+useSelectedLayoutSegment
+useSelectedLayoutSegments
+userAgent
+next.config.js Options
+appDir
+assetPrefix
+basePath
+cacheLife
+compress
+crossOrigin
+cssChunking
+devIndicators
+distDir
+dynamicIO
+env
+eslint
+expireTime
+exportPathMap
+generateBuildId
+generateEtags
+headers
+httpAgentOptions
+images
+cacheHandler
+logging
+mdxRs
+onDemandEntries
+optimizePackageImports
+output
+pageExtensions
+poweredByHeader
+ppr
+productionBrowserSourceMaps
+reactCompiler
+reactMaxHeadersLength
+reactStrictMode
+redirects
+rewrites
+sassOptions
+serverActions
+serverComponentsHmrCache
+serverExternalPackages
+staleTimes
+staticGeneration*
+trailingSlash
+transpilePackages
+turbo
+typedRoutes
+typescript
+urlImports
+useLightningcss
+webpack
+webVitalsAttribution
+CLI
+create-next-app
+next CLI
+Edge Runtime
+Legacy APIs
+unstable_cache
+unstable_noStore
+Architecture
+Accessibility
+Fast Refresh
+Next.js Compiler
+Supported Browsers
+Turbopack
+Community
+Contribution Guide
+On this page
+Configuration
+Supported Features
+Server Components
+Client Components
+Image Optimization
+Route Handlers
+Browser APIs
+Unsupported Features
+Deploying
+Version History
+Managed Next.js (Vercel)
+Scroll to top
+Building Your Application
+Deploying
+Static Exports
+Static Exports
+
+Next.js enables starting as a static site or Single-Page Application (SPA), then later optionally upgrading to use features that require a server.
+
+When running next build, Next.js generates an HTML file per route. By breaking a strict SPA into individual HTML files, Next.js can avoid loading unnecessary JavaScript code on the client-side, reducing the bundle size and enabling faster page loads.
+
+Since Next.js supports this static export, it can be deployed and hosted on any web server that can serve HTML/CSS/JS static assets.
+
+Configuration
+
+To enable a static export, change the output mode inside next.config.js:
+
+next.config.js
+/**
+ * @type {import('next').NextConfig}
+ */
+const nextConfig = {
+  output: 'export',
+ 
+  // Optional: Change links `/me` -> `/me/` and emit `/me.html` -> `/me/index.html`
+  // trailingSlash: true,
+ 
+  // Optional: Prevent automatic `/me` -> `/me/`, instead preserve `href`
+  // skipTrailingSlashRedirect: true,
+ 
+  // Optional: Change the output directory `out` -> `dist`
+  // distDir: 'dist',
+}
+ 
+module.exports = nextConfig
+
+After running next build, Next.js will produce an out folder which contains the HTML/CSS/JS assets for your application.
+
+Supported Features
+
+The core of Next.js has been designed to support static exports.
+
+Server Components
+
+When you run next build to generate a static export, Server Components consumed inside the app directory will run during the build, similar to traditional static-site generation.
+
+The resulting component will be rendered into static HTML for the initial page load and a static payload for client navigation between routes. No changes are required for your Server Components when using the static export, unless they consume dynamic server functions.
+
+app/page.tsx
+TypeScript
+JavaScript
+TypeScript
+export default async function Page() {
+  // This fetch will run on the server during `next build`
+  const res = await fetch('https://api.example.com/...')
+  const data = await res.json()
+ 
+  return <main>...</main>
+}
+Client Components
+
+If you want to perform data fetching on the client, you can use a Client Component with SWR
+ to memoize requests.
+
+app/other/page.tsx
+TypeScript
+JavaScript
+TypeScript
+'use client'
+ 
+import useSWR from 'swr'
+ 
+const fetcher = (url: string) => fetch(url).then((r) => r.json())
+ 
+export default function Page() {
+  const { data, error } = useSWR(
+    `https://jsonplaceholder.typicode.com/posts/1`,
+    fetcher
+  )
+  if (error) return 'Failed to load'
+  if (!data) return 'Loading...'
+ 
+  return data.title
+}
+
+Since route transitions happen client-side, this behaves like a traditional SPA. For example, the following index route allows you to navigate to different posts on the client:
+
+app/page.tsx
+TypeScript
+JavaScript
+TypeScript
+import Link from 'next/link'
+ 
+export default function Page() {
+  return (
+    <>
+      <h1>Index Page</h1>
+      <hr />
+      <ul>
+        <li>
+          <Link href="/post/1">Post 1</Link>
+        </li>
+        <li>
+          <Link href="/post/2">Post 2</Link>
+        </li>
+      </ul>
+    </>
+  )
+}
+Image Optimization
+
+Image Optimization through next/image can be used with a static export by defining a custom image loader in next.config.js. For example, you can optimize images with a service like Cloudinary:
+
+next.config.js
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  output: 'export',
+  images: {
+    loader: 'custom',
+    loaderFile: './my-loader.ts',
+  },
+}
+ 
+module.exports = nextConfig
+
+This custom loader will define how to fetch images from a remote source. For example, the following loader will construct the URL for Cloudinary:
+
+my-loader.ts
+TypeScript
+JavaScript
+TypeScript
+export default function cloudinaryLoader({
+  src,
+  width,
+  quality,
+}: {
+  src: string
+  width: number
+  quality?: number
+}) {
+  const params = ['f_auto', 'c_limit', `w_${width}`, `q_${quality || 'auto'}`]
+  return `https://res.cloudinary.com/demo/image/upload/${params.join(
+    ','
+  )}${src}`
+}
+
+You can then use next/image in your application, defining relative paths to the image in Cloudinary:
+
+app/page.tsx
+TypeScript
+JavaScript
+TypeScript
+import Image from 'next/image'
+ 
+export default function Page() {
+  return <Image alt="turtles" src="/turtles.jpg" width={300} height={300} />
+}
+Route Handlers
+
+Route Handlers will render a static response when running next build. Only the GET HTTP verb is supported. This can be used to generate static HTML, JSON, TXT, or other files from cached or uncached data. For example:
+
+app/data.json/route.ts
+TypeScript
+JavaScript
+TypeScript
+export async function GET() {
+  return Response.json({ name: 'Lee' })
+}
+
+The above file app/data.json/route.ts will render to a static file during next build, producing data.json containing { name: 'Lee' }.
+
+If you need to read dynamic values from the incoming request, you cannot use a static export.
+
+Browser APIs
+
+Client Components are pre-rendered to HTML during next build. Because Web APIs
+ like window, localStorage, and navigator are not available on the server, you need to safely access these APIs only when running in the browser. For example:
+
+'use client';
+ 
+import { useEffect } from 'react';
+ 
+export default function ClientComponent() {
+  useEffect(() => {
+    // You now have access to `window`
+    console.log(window.innerHeight);
+  }, [])
+ 
+  return ...;
+}
+Unsupported Features
+
+Features that require a Node.js server, or dynamic logic that cannot be computed during the build process, are not supported:
+
+Dynamic Routes with dynamicParams: true
+Dynamic Routes without generateStaticParams()
+Route Handlers that rely on Request
+Cookies
+Rewrites
+Redirects
+Headers
+Middleware
+Incremental Static Regeneration
+Image Optimization with the default loader
+Draft Mode
+Server Actions
+
+Attempting to use any of these features with next dev will result in an error, similar to setting the dynamic option to error in the root layout.
+
+export const dynamic = 'error'
+Deploying
+
+With a static export, Next.js can be deployed and hosted on any web server that can serve HTML/CSS/JS static assets.
+
+When running next build, Next.js generates the static export into the out folder. For example, let's say you have the following routes:
+
+/
+/blog/[id]
+
+After running next build, Next.js will generate the following files:
+
+/out/index.html
+/out/404.html
+/out/blog/post-1.html
+/out/blog/post-2.html
+
+If you are using a static host like Nginx, you can configure rewrites from incoming requests to the correct files:
+
+nginx.conf
+server {
+  listen 80;
+  server_name acme.com;
+ 
+  root /var/www/out;
+ 
+  location / {
+      try_files $uri $uri.html $uri/ =404;
+  }
+ 
+  # This is necessary when `trailingSlash: false`.
+  # You can omit this when `trailingSlash: true`.
+  location /blog/ {
+      rewrite ^/blog/(.*)$ /blog/$1.html break;
+  }
+ 
+  error_page 404 /404.html;
+  location = /404.html {
+      internal;
+  }
+}
+Version History
+Version	Changes
+v14.0.0	next export has been removed in favor of "output": "export"
+v13.4.0	App Router (Stable) adds enhanced static export support, including using React Server Components and Route Handlers.
+v13.3.0	next export is deprecated and replaced with "output": "export"
+Previous
+Production Checklist
+Next
+Multi-Zones
+
+Was this helpful?
+
+supported.
+Send
+Resources
+Docs
+Learn
+Showcase
+Blog
+Analytics
+Next.js Conf
+Previews
+More
+Next.js Commerce
+Contact Sales
+GitHub
+Releases
+Telemetry
+Governance
+About Vercel
+Next.js + Vercel
+Open Source Software
+GitHub
+X
+Legal
+Privacy Policy
+Cookie Preferences
+Subscribe to our newsletter
+
+Stay updated on new releases and features, guides, and case studies.
+
+Subscribe
+
+© 2024 Vercel, Inc.

@@ -1,0 +1,378 @@
+Skip to content
+Showcase
+Docs
+Blog
+Templates
+Enterprise
+Search documentation...
+Feedback
+Learn
+
+Using App Router
+
+Features available in /app
+
+Using Stable Version
+
+v15.0.2
+
+Getting Started
+Installation
+Project Structure
+Building Your Application
+Routing
+Defining Routes
+Pages
+Layouts and Templates
+Linking and Navigating
+Error Handling
+Loading UI and Streaming
+Redirecting
+Route Groups
+Project Organization
+Dynamic Routes
+Parallel Routes
+Intercepting Routes
+Route Handlers
+Middleware
+Internationalization
+Data Fetching
+Data Fetching and Caching
+Server Actions and Mutations
+Incremental Static Regeneration (ISR)
+Rendering
+Server Components
+Client Components
+Composition Patterns
+Partial Prerendering
+Runtimes
+Caching
+Styling
+CSS
+Tailwind CSS
+Sass
+CSS-in-JS
+Optimizing
+Images
+Videos
+Fonts
+Metadata
+Scripts
+Package Bundling
+Lazy Loading
+Analytics
+Instrumentation
+OpenTelemetry
+Static Assets
+Third Party Libraries
+Memory Usage
+Configuring
+TypeScript
+ESLint
+Environment Variables
+Absolute Imports and Module Path Aliases
+MDX
+src Directory
+Custom Server
+Draft Mode
+Content Security Policy
+Debugging
+Progressive Web Applications (PWA)
+Testing
+Vitest
+Jest
+Playwright
+Cypress
+Authentication
+Deploying
+Production Checklist
+Static Exports
+Multi-Zones
+Upgrading
+Codemods
+Version 15
+Version 14
+App Router Migration
+Migrating from Create React App
+Migrating from Vite
+Examples
+API Reference
+Directives
+use cache
+use client
+use server
+Components
+Font
+<Form>
+<Image>
+<Link>
+<Script>
+File Conventions
+default.js
+error.js
+instrumentation.js
+layout.js
+loading.js
+mdx-components.js
+middleware.js
+not-found.js
+page.js
+route.js
+Route Segment Config
+template.js
+Metadata Files
+favicon, icon, and apple-icon
+manifest.json
+opengraph-image and twitter-image
+robots.txt
+sitemap.xml
+Functions
+cacheTag
+connection
+cookies
+draftMode
+fetch
+generateImageMetadata
+generateMetadata
+generateSitemaps
+generateStaticParams
+generateViewport
+headers
+ImageResponse
+NextRequest
+NextResponse
+notFound
+permanentRedirect
+redirect
+revalidatePath
+revalidateTag
+unstable_after
+unstable_rethrow
+useParams
+usePathname
+useReportWebVitals
+useRouter
+useSearchParams
+useSelectedLayoutSegment
+useSelectedLayoutSegments
+userAgent
+next.config.js Options
+appDir
+assetPrefix
+basePath
+cacheLife
+compress
+crossOrigin
+cssChunking
+devIndicators
+distDir
+dynamicIO
+env
+eslint
+expireTime
+exportPathMap
+generateBuildId
+generateEtags
+headers
+httpAgentOptions
+images
+cacheHandler
+logging
+mdxRs
+onDemandEntries
+optimizePackageImports
+output
+pageExtensions
+poweredByHeader
+ppr
+productionBrowserSourceMaps
+reactCompiler
+reactMaxHeadersLength
+reactStrictMode
+redirects
+rewrites
+sassOptions
+serverActions
+serverComponentsHmrCache
+serverExternalPackages
+staleTimes
+staticGeneration*
+trailingSlash
+transpilePackages
+turbo
+typedRoutes
+typescript
+urlImports
+useLightningcss
+webpack
+webVitalsAttribution
+CLI
+create-next-app
+next CLI
+Edge Runtime
+Legacy APIs
+unstable_cache
+unstable_noStore
+Architecture
+Accessibility
+Fast Refresh
+Next.js Compiler
+Supported Browsers
+Turbopack
+Community
+Contribution Guide
+On this page
+Reference
+Good to know
+Examples
+Enabling Draft Mode
+Disabling Draft Mode
+Checking if Draft Mode is enabled
+Version History
+Next Steps
+Managed Next.js (Vercel)
+Scroll to top
+API Reference
+Functions
+draftMode
+draftMode
+
+draftMode is an async function allows you to enable and disable Draft Mode, as well as check if Draft Mode is enabled in a Server Component.
+
+app/page.ts
+import { draftMode } from 'next/headers'
+ 
+export default async function Page() {
+  const { isEnabled } = await draftMode()
+}
+app/page.js
+import { draftMode } from 'next/headers'
+ 
+export default async function Page() {
+  const { isEnabled } = await draftMode()
+}
+Reference
+
+The following methods and properties are available:
+
+Method	Description
+isEnabled	A boolean value that indicates if Draft Mode is enabled.
+enable()	Enables Draft Mode in a Route Handler by setting a cookie (__prerender_bypass).
+disable()	Disables Draft Mode in a Route Handler by deleting a cookie.
+Good to know
+draftMode is an asynchronous function that returns a promise. You must use async/await or React's use
+ function.
+In version 14 and earlier, draftMode was a synchronous function. To help with backwards compatability, you can still access it synchronously in Next.js 15, but this behavior will be deprecated in the future.
+A new bypass cookie value will be generated each time you run next build. This ensures that the bypass cookie can’t be guessed.
+To test Draft Mode locally over HTTP, your browser will need to allow third-party cookies and local storage access.
+Examples
+Enabling Draft Mode
+
+To enable Draft Mode, create a new Route Handler and call the enable() method:
+
+app/draft/route.ts
+TypeScript
+JavaScript
+TypeScript
+import { draftMode } from 'next/headers'
+ 
+export async function GET(request: Request) {
+  const draft = await draftMode()
+  draft().enable()
+  return new Response('Draft mode is enabled')
+}
+Disabling Draft Mode
+
+By default, the Draft Mode session ends when the browser is closed.
+
+To disable Draft Mode manually, call the disable() method in your Route Handler:
+
+app/draft/route.ts
+TypeScript
+JavaScript
+TypeScript
+import { draftMode } from 'next/headers'
+ 
+export async function GET(request: Request) {
+  const draft = await draftMode()
+  draft().disable()
+  return new Response('Draft mode is disabled')
+}
+
+Then, send a request to invoke the Route Handler. If calling the route using the <Link> component, you must pass prefetch={false} to prevent accidentally deleting the cookie on prefetch.
+
+Checking if Draft Mode is enabled
+
+You can check if Draft Mode is enabled in a Server Component with the isEnabled property:
+
+app/page.ts
+import { draftMode } from 'next/headers'
+ 
+export default async function Page() {
+  const { isEnabled } = await draftMode()
+  return (
+    <main>
+      <h1>My Blog Post</h1>
+      <p>Draft Mode is currently {isEnabled ? 'Enabled' : 'Disabled'}</p>
+    </main>
+  )
+}
+app/page.js
+import { draftMode } from 'next/headers'
+ 
+export default async function Page() {
+  const { isEnabled } = await draftMode()
+  return (
+    <main>
+      <h1>My Blog Post</h1>
+      <p>Draft Mode is currently {isEnabled ? 'Enabled' : 'Disabled'}</p>
+    </main>
+  )
+}
+Version History
+Version	Changes
+v15.0.0-RC	draftMode is now an async function. A codemod is available.
+v13.4.0	draftMode introduced.
+Next Steps
+Learn how to use Draft Mode with this step-by-step guide.
+Draft Mode
+Next.js has draft mode to toggle between static and dynamic pages. You can learn how it works with App Router here.
+Previous
+cookies
+Next
+fetch
+
+Was this helpful?
+
+supported.
+Send
+Resources
+Docs
+Learn
+Showcase
+Blog
+Analytics
+Next.js Conf
+Previews
+More
+Next.js Commerce
+Contact Sales
+GitHub
+Releases
+Telemetry
+Governance
+About Vercel
+Next.js + Vercel
+Open Source Software
+GitHub
+X
+Legal
+Privacy Policy
+Cookie Preferences
+Subscribe to our newsletter
+
+Stay updated on new releases and features, guides, and case studies.
+
+Subscribe
+
+© 2024 Vercel, Inc.

@@ -1,0 +1,377 @@
+Skip to content
+Showcase
+Docs
+Blog
+Templates
+Enterprise
+Search documentation...
+Feedback
+Learn
+
+Using App Router
+
+Features available in /app
+
+Using Stable Version
+
+v15.0.2
+
+Getting Started
+Installation
+Project Structure
+Building Your Application
+Routing
+Defining Routes
+Pages
+Layouts and Templates
+Linking and Navigating
+Error Handling
+Loading UI and Streaming
+Redirecting
+Route Groups
+Project Organization
+Dynamic Routes
+Parallel Routes
+Intercepting Routes
+Route Handlers
+Middleware
+Internationalization
+Data Fetching
+Data Fetching and Caching
+Server Actions and Mutations
+Incremental Static Regeneration (ISR)
+Rendering
+Server Components
+Client Components
+Composition Patterns
+Partial Prerendering
+Runtimes
+Caching
+Styling
+CSS
+Tailwind CSS
+Sass
+CSS-in-JS
+Optimizing
+Images
+Videos
+Fonts
+Metadata
+Scripts
+Package Bundling
+Lazy Loading
+Analytics
+Instrumentation
+OpenTelemetry
+Static Assets
+Third Party Libraries
+Memory Usage
+Configuring
+TypeScript
+ESLint
+Environment Variables
+Absolute Imports and Module Path Aliases
+MDX
+src Directory
+Custom Server
+Draft Mode
+Content Security Policy
+Debugging
+Progressive Web Applications (PWA)
+Testing
+Vitest
+Jest
+Playwright
+Cypress
+Authentication
+Deploying
+Production Checklist
+Static Exports
+Multi-Zones
+Upgrading
+Codemods
+Version 15
+Version 14
+App Router Migration
+Migrating from Create React App
+Migrating from Vite
+Examples
+API Reference
+Directives
+use cache
+use client
+use server
+Components
+Font
+<Form>
+<Image>
+<Link>
+<Script>
+File Conventions
+default.js
+error.js
+instrumentation.js
+layout.js
+loading.js
+mdx-components.js
+middleware.js
+not-found.js
+page.js
+route.js
+Route Segment Config
+template.js
+Metadata Files
+favicon, icon, and apple-icon
+manifest.json
+opengraph-image and twitter-image
+robots.txt
+sitemap.xml
+Functions
+cacheTag
+connection
+cookies
+draftMode
+fetch
+generateImageMetadata
+generateMetadata
+generateSitemaps
+generateStaticParams
+generateViewport
+headers
+ImageResponse
+NextRequest
+NextResponse
+notFound
+permanentRedirect
+redirect
+revalidatePath
+revalidateTag
+unstable_after
+unstable_rethrow
+useParams
+usePathname
+useReportWebVitals
+useRouter
+useSearchParams
+useSelectedLayoutSegment
+useSelectedLayoutSegments
+userAgent
+next.config.js Options
+appDir
+assetPrefix
+basePath
+cacheLife
+compress
+crossOrigin
+cssChunking
+devIndicators
+distDir
+dynamicIO
+env
+eslint
+expireTime
+exportPathMap
+generateBuildId
+generateEtags
+headers
+httpAgentOptions
+images
+cacheHandler
+logging
+mdxRs
+onDemandEntries
+optimizePackageImports
+output
+pageExtensions
+poweredByHeader
+ppr
+productionBrowserSourceMaps
+reactCompiler
+reactMaxHeadersLength
+reactStrictMode
+redirects
+rewrites
+sassOptions
+serverActions
+serverComponentsHmrCache
+serverExternalPackages
+staleTimes
+staticGeneration*
+trailingSlash
+transpilePackages
+turbo
+typedRoutes
+typescript
+urlImports
+useLightningcss
+webpack
+webVitalsAttribution
+CLI
+create-next-app
+next CLI
+Edge Runtime
+Legacy APIs
+unstable_cache
+unstable_noStore
+Architecture
+Accessibility
+Fast Refresh
+Next.js Compiler
+Supported Browsers
+Turbopack
+Community
+Contribution Guide
+On this page
+Using use server at the top of a file
+Using Server Functions in a Client Component
+Using use server inline
+Security considerations
+Authentication and authorization
+Reference
+Managed Next.js (Vercel)
+Scroll to top
+API Reference
+Directives
+use server
+use server
+
+The use server directive designates a function or file to be executed on the server side. It can be used at the top of a file to indicate that all functions in the file are server-side, or inline at the top of a function to mark the function as a Server Function
+. This is a React feature.
+
+Using use server at the top of a file
+
+The following example shows a file with a use server directive at the top. All functions in the file are executed on the server.
+
+app/actions.ts
+TypeScript
+JavaScript
+TypeScript
+'use server'
+import { db } from '@/lib/db' // Your database client
+ 
+export async function createUser(data: { name: string; email: string }) {
+  const user = await db.user.create({ data })
+  return user
+}
+Using Server Functions in a Client Component
+
+To use Server Functions in Client Components you need to create your Server Functions in a dedicated file using the use server directive at the top of the file. These Server Functions can then be imported into Client and Server Components and executed.
+
+Assuming you have a fetchUsers Server Function in actions.ts:
+
+app/actions.ts
+TypeScript
+JavaScript
+TypeScript
+'use server'
+import { db } from '@/lib/db' // Your database client
+ 
+export async function fetchUsers() {
+  const users = await db.user.findMany()
+  return users
+}
+
+Then you can import the fetchUsers Server Function into a Client Component and execute it on the client-side.
+
+app/components/my-button.tsx
+TypeScript
+JavaScript
+TypeScript
+'use client'
+import { fetchUsers } from '../actions'
+ 
+export default function MyButton() {
+  return <button onClick={() => fetchUsers()}>Fetch Users</button>
+}
+Using use server inline
+
+In the following example, use server is used inline at the top of a function to mark it as a Server Function
+:
+
+app/page.tsx
+TypeScript
+JavaScript
+TypeScript
+import { db } from '@/lib/db' // Your database client
+ 
+export default function UserList() {
+  async function fetchUsers() {
+    'use server'
+    const users = await db.user.findMany()
+    return users
+  }
+ 
+  return <button onClick={() => fetchUsers()}>Fetch Users</button>
+}
+Security considerations
+
+When using the use server directive, it's important to ensure that all server-side logic is secure and that sensitive data remains protected.
+
+Authentication and authorization
+
+Always authenticate and authorize users before performing sensitive server-side operations.
+
+app/actions.ts
+TypeScript
+JavaScript
+TypeScript
+'use server'
+ 
+import { db } from '@/lib/db' // Your database client
+import { authenticate } from '@/lib/auth' // Your authentication library
+ 
+export async function createUser(
+  data: { name: string; email: string },
+  token: string
+) {
+  const user = authenticate(token)
+  if (!user) {
+    throw new Error('Unauthorized')
+  }
+  const newUser = await db.user.create({ data })
+  return newUser
+}
+Reference
+
+See the React documentation
+ for more information on use server.
+
+Previous
+use client
+Next
+Components
+
+Was this helpful?
+
+supported.
+Send
+Resources
+Docs
+Learn
+Showcase
+Blog
+Analytics
+Next.js Conf
+Previews
+More
+Next.js Commerce
+Contact Sales
+GitHub
+Releases
+Telemetry
+Governance
+About Vercel
+Next.js + Vercel
+Open Source Software
+GitHub
+X
+Legal
+Privacy Policy
+Cookie Preferences
+Subscribe to our newsletter
+
+Stay updated on new releases and features, guides, and case studies.
+
+Subscribe
+
+© 2024 Vercel, Inc.

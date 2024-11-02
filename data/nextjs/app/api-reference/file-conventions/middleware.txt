@@ -1,0 +1,385 @@
+Skip to content
+Showcase
+Docs
+Blog
+Templates
+Enterprise
+Search documentation...
+Feedback
+Learn
+
+Using App Router
+
+Features available in /app
+
+Using Stable Version
+
+v15.0.2
+
+Getting Started
+Installation
+Project Structure
+Building Your Application
+Routing
+Defining Routes
+Pages
+Layouts and Templates
+Linking and Navigating
+Error Handling
+Loading UI and Streaming
+Redirecting
+Route Groups
+Project Organization
+Dynamic Routes
+Parallel Routes
+Intercepting Routes
+Route Handlers
+Middleware
+Internationalization
+Data Fetching
+Data Fetching and Caching
+Server Actions and Mutations
+Incremental Static Regeneration (ISR)
+Rendering
+Server Components
+Client Components
+Composition Patterns
+Partial Prerendering
+Runtimes
+Caching
+Styling
+CSS
+Tailwind CSS
+Sass
+CSS-in-JS
+Optimizing
+Images
+Videos
+Fonts
+Metadata
+Scripts
+Package Bundling
+Lazy Loading
+Analytics
+Instrumentation
+OpenTelemetry
+Static Assets
+Third Party Libraries
+Memory Usage
+Configuring
+TypeScript
+ESLint
+Environment Variables
+Absolute Imports and Module Path Aliases
+MDX
+src Directory
+Custom Server
+Draft Mode
+Content Security Policy
+Debugging
+Progressive Web Applications (PWA)
+Testing
+Vitest
+Jest
+Playwright
+Cypress
+Authentication
+Deploying
+Production Checklist
+Static Exports
+Multi-Zones
+Upgrading
+Codemods
+Version 15
+Version 14
+App Router Migration
+Migrating from Create React App
+Migrating from Vite
+Examples
+API Reference
+Directives
+use cache
+use client
+use server
+Components
+Font
+<Form>
+<Image>
+<Link>
+<Script>
+File Conventions
+default.js
+error.js
+instrumentation.js
+layout.js
+loading.js
+mdx-components.js
+middleware.js
+not-found.js
+page.js
+route.js
+Route Segment Config
+template.js
+Metadata Files
+favicon, icon, and apple-icon
+manifest.json
+opengraph-image and twitter-image
+robots.txt
+sitemap.xml
+Functions
+cacheTag
+connection
+cookies
+draftMode
+fetch
+generateImageMetadata
+generateMetadata
+generateSitemaps
+generateStaticParams
+generateViewport
+headers
+ImageResponse
+NextRequest
+NextResponse
+notFound
+permanentRedirect
+redirect
+revalidatePath
+revalidateTag
+unstable_after
+unstable_rethrow
+useParams
+usePathname
+useReportWebVitals
+useRouter
+useSearchParams
+useSelectedLayoutSegment
+useSelectedLayoutSegments
+userAgent
+next.config.js Options
+appDir
+assetPrefix
+basePath
+cacheLife
+compress
+crossOrigin
+cssChunking
+devIndicators
+distDir
+dynamicIO
+env
+eslint
+expireTime
+exportPathMap
+generateBuildId
+generateEtags
+headers
+httpAgentOptions
+images
+cacheHandler
+logging
+mdxRs
+onDemandEntries
+optimizePackageImports
+output
+pageExtensions
+poweredByHeader
+ppr
+productionBrowserSourceMaps
+reactCompiler
+reactMaxHeadersLength
+reactStrictMode
+redirects
+rewrites
+sassOptions
+serverActions
+serverComponentsHmrCache
+serverExternalPackages
+staleTimes
+staticGeneration*
+trailingSlash
+transpilePackages
+turbo
+typedRoutes
+typescript
+urlImports
+useLightningcss
+webpack
+webVitalsAttribution
+CLI
+create-next-app
+next CLI
+Edge Runtime
+Legacy APIs
+unstable_cache
+unstable_noStore
+Architecture
+Accessibility
+Fast Refresh
+Next.js Compiler
+Supported Browsers
+Turbopack
+Community
+Contribution Guide
+On this page
+Exports
+Middleware function
+Config object (optional)
+Matcher
+Params
+request
+NextResponse
+Runtime
+Version History
+Learn more about Middleware
+Managed Next.js (Vercel)
+Scroll to top
+API Reference
+File Conventions
+middleware.js
+middleware.js
+
+The middleware.js|ts file is used to write Middleware and run code on the server before a request is completed. Then, based on the incoming request, you can modify the response by rewriting, redirecting, modifying the request or response headers, or responding directly.
+
+Middleware executes before routes are rendered. It's particularly useful for implementing custom server-side logic like authentication, logging, or handling redirects.
+
+Use the file middleware.ts (or .js) in the root of your project to define Middleware. For example, at the same level as app or pages, or inside src if applicable.
+
+middleware.ts
+TypeScript
+JavaScript
+TypeScript
+import { NextResponse, NextRequest } from 'next/server'
+ 
+// This function can be marked `async` if using `await` inside
+export function middleware(request: NextRequest) {
+  return NextResponse.redirect(new URL('/home', request.url))
+}
+ 
+export const config = {
+  matcher: '/about/:path*',
+}
+Exports
+Middleware function
+
+The file must export a single function, either as a default export or named middleware. Note that multiple middleware from the same file are not supported.
+
+middleware.js
+// Example of default export
+export default function middleware(request) {
+  // Middleware logic
+}
+Config object (optional)
+
+Optionally, a config object can be exported alongside the Middleware function. This object includes the matcher to specify paths where the Middleware applies.
+
+Matcher
+
+The matcher option allows you to target specific paths for the Middleware to run on. You can specify these paths in several ways:
+
+For a single path: Directly use a string to define the path, like '/about'.
+For multiple paths: Use an array to list multiple paths, such as matcher: ['/about', '/contact'], which applies the Middleware to both /about and /contact.
+
+Additionally, matcher supports complex path specifications through regular expressions, such as matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'], enabling precise control over which paths to include or exclude.
+
+The matcher option also accepts an array of objects with the following keys:
+
+source: The path or pattern used to match the request paths. It can be a string for direct path matching or a pattern for more complex matching.
+regexp (optional): A regular expression string that fine-tunes the matching based on the source. It provides additional control over which paths are included or excluded.
+locale (optional): A boolean that, when set to false, ignores locale-based routing in path matching.
+has (optional): Specifies conditions based on the presence of specific request elements such as headers, query parameters, or cookies.
+missing (optional): Focuses on conditions where certain request elements are absent, like missing headers or cookies.
+middleware.js
+export const config = {
+  matcher: [
+    {
+      source: '/api/*',
+      regexp: '^/api/(.*)',
+      locale: false,
+      has: [
+        { type: 'header', key: 'Authorization', value: 'Bearer Token' },
+        { type: 'query', key: 'userId', value: '123' },
+      ],
+      missing: [{ type: 'cookie', key: 'session', value: 'active' }],
+    },
+  ],
+}
+Params
+request
+
+When defining Middleware, the default export function accepts a single parameter, request. This parameter is an instance of NextRequest, which represents the incoming HTTP request.
+
+middleware.ts
+TypeScript
+JavaScript
+TypeScript
+import type { NextRequest } from 'next/server'
+ 
+export function middleware(request: NextRequest) {
+  // Middleware logic goes here
+}
+
+Good to know:
+
+NextRequest is a type that represents incoming HTTP requests in Next.js Middleware, whereas NextResponse is a class used to manipulate and send back HTTP responses.
+NextResponse
+
+Middleware can use the NextResponse object which extends the Web Response API
+. By returning a NextResponse object, you can directly manipulate cookies, set headers, implement redirects, and rewrite paths.
+
+Good to know: For redirects, you can also use Response.redirect instead of NextResponse.redirect.
+
+Runtime
+
+Middleware only supports the Edge runtime. The Node.js runtime cannot be used.
+
+Version History
+Version	Changes
+v13.1.0	Advanced Middleware flags added
+v13.0.0	Middleware can modify request headers, response headers, and send responses
+v12.2.0	Middleware is stable, please see the upgrade guide
+v12.0.9	Enforce absolute URLs in Edge Runtime (PR
+)
+v12.0.0	Middleware (Beta) added
+Learn more about Middleware
+Middleware
+Learn how to use Middleware to run code before a request is completed.
+Previous
+mdx-components.js
+Next
+not-found.js
+
+Was this helpful?
+
+supported.
+Send
+Resources
+Docs
+Learn
+Showcase
+Blog
+Analytics
+Next.js Conf
+Previews
+More
+Next.js Commerce
+Contact Sales
+GitHub
+Releases
+Telemetry
+Governance
+About Vercel
+Next.js + Vercel
+Open Source Software
+GitHub
+X
+Legal
+Privacy Policy
+Cookie Preferences
+Subscribe to our newsletter
+
+Stay updated on new releases and features, guides, and case studies.
+
+Subscribe
+
+© 2024 Vercel, Inc.

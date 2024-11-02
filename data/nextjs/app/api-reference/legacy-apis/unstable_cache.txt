@@ -1,0 +1,334 @@
+Skip to content
+Showcase
+Docs
+Blog
+Templates
+Enterprise
+Search documentation...
+Feedback
+Learn
+
+Using App Router
+
+Features available in /app
+
+Using Stable Version
+
+v15.0.2
+
+Getting Started
+Installation
+Project Structure
+Building Your Application
+Routing
+Defining Routes
+Pages
+Layouts and Templates
+Linking and Navigating
+Error Handling
+Loading UI and Streaming
+Redirecting
+Route Groups
+Project Organization
+Dynamic Routes
+Parallel Routes
+Intercepting Routes
+Route Handlers
+Middleware
+Internationalization
+Data Fetching
+Data Fetching and Caching
+Server Actions and Mutations
+Incremental Static Regeneration (ISR)
+Rendering
+Server Components
+Client Components
+Composition Patterns
+Partial Prerendering
+Runtimes
+Caching
+Styling
+CSS
+Tailwind CSS
+Sass
+CSS-in-JS
+Optimizing
+Images
+Videos
+Fonts
+Metadata
+Scripts
+Package Bundling
+Lazy Loading
+Analytics
+Instrumentation
+OpenTelemetry
+Static Assets
+Third Party Libraries
+Memory Usage
+Configuring
+TypeScript
+ESLint
+Environment Variables
+Absolute Imports and Module Path Aliases
+MDX
+src Directory
+Custom Server
+Draft Mode
+Content Security Policy
+Debugging
+Progressive Web Applications (PWA)
+Testing
+Vitest
+Jest
+Playwright
+Cypress
+Authentication
+Deploying
+Production Checklist
+Static Exports
+Multi-Zones
+Upgrading
+Codemods
+Version 15
+Version 14
+App Router Migration
+Migrating from Create React App
+Migrating from Vite
+Examples
+API Reference
+Directives
+use cache
+use client
+use server
+Components
+Font
+<Form>
+<Image>
+<Link>
+<Script>
+File Conventions
+default.js
+error.js
+instrumentation.js
+layout.js
+loading.js
+mdx-components.js
+middleware.js
+not-found.js
+page.js
+route.js
+Route Segment Config
+template.js
+Metadata Files
+favicon, icon, and apple-icon
+manifest.json
+opengraph-image and twitter-image
+robots.txt
+sitemap.xml
+Functions
+cacheTag
+connection
+cookies
+draftMode
+fetch
+generateImageMetadata
+generateMetadata
+generateSitemaps
+generateStaticParams
+generateViewport
+headers
+ImageResponse
+NextRequest
+NextResponse
+notFound
+permanentRedirect
+redirect
+revalidatePath
+revalidateTag
+unstable_after
+unstable_rethrow
+useParams
+usePathname
+useReportWebVitals
+useRouter
+useSearchParams
+useSelectedLayoutSegment
+useSelectedLayoutSegments
+userAgent
+next.config.js Options
+appDir
+assetPrefix
+basePath
+cacheLife
+compress
+crossOrigin
+cssChunking
+devIndicators
+distDir
+dynamicIO
+env
+eslint
+expireTime
+exportPathMap
+generateBuildId
+generateEtags
+headers
+httpAgentOptions
+images
+cacheHandler
+logging
+mdxRs
+onDemandEntries
+optimizePackageImports
+output
+pageExtensions
+poweredByHeader
+ppr
+productionBrowserSourceMaps
+reactCompiler
+reactMaxHeadersLength
+reactStrictMode
+redirects
+rewrites
+sassOptions
+serverActions
+serverComponentsHmrCache
+serverExternalPackages
+staleTimes
+staticGeneration*
+trailingSlash
+transpilePackages
+turbo
+typedRoutes
+typescript
+urlImports
+useLightningcss
+webpack
+webVitalsAttribution
+CLI
+create-next-app
+next CLI
+Edge Runtime
+Legacy APIs
+unstable_cache
+unstable_noStore
+Architecture
+Accessibility
+Fast Refresh
+Next.js Compiler
+Supported Browsers
+Turbopack
+Community
+Contribution Guide
+On this page
+Parameters
+Returns
+Example
+Version History
+Managed Next.js (Vercel)
+Scroll to top
+API Reference
+Legacy APIs
+unstable_cache
+unstable_cache
+This is a legacy API and no longer recommended. It's still supported for backward compatibility.
+
+In version 15, we recommend using the use cache directive instead.
+
+unstable_cache allows you to cache the results of expensive operations, like database queries, and reuse them across multiple requests.
+
+import { getUser } from './data';
+import { unstable_cache } from 'next/cache';
+ 
+const getCachedUser = unstable_cache(
+  async (id) => getUser(id),
+  ['my-app-user']
+);
+ 
+export default async function Component({ userID }) {
+  const user = await getCachedUser(userID);
+  ...
+}
+
+Good to know:
+
+Accessing dynamic data sources such as headers or cookies inside a cache scope is not supported. If you need this data inside a cached function use headers outside of the cached function and pass the required dynamic data in as an argument.
+This API uses Next.js' built-in Data Cache to persist the result across requests and deployments.
+
+Warning: This API is unstable and may change in the future. We will provide migration documentation and codemods, if needed, as this API stabilizes.
+
+Parameters
+const data = unstable_cache(fetchData, keyParts, options)()
+fetchData: This is an asynchronous function that fetches the data you want to cache. It must be a function that returns a Promise.
+keyParts: This is an extra array of keys that further adds identification to the cache. By default, unstable_cache already uses the arguments and the stringified version of your function as the cache key. It is optional in most cases; the only time you need to use it is when you use external variables without passing them as parameters. However, it is important to add closures used within the function if you do not pass them as parameters.
+options: This is an object that controls how the cache behaves. It can contain the following properties:
+tags: An array of tags that can be used to control cache invalidation. Next.js will not use this to uniquely identify the function.
+revalidate: The number of seconds after which the cache should be revalidated. Omit or pass false to cache indefinitely or until matching revalidateTag() or revalidatePath() methods are called.
+Returns
+
+unstable_cache returns a function that when invoked, returns a Promise that resolves to the cached data. If the data is not in the cache, the provided function will be invoked, and its result will be cached and returned.
+
+Example
+app/page.tsx
+TypeScript
+JavaScript
+TypeScript
+import { unstable_cache } from 'next/cache'
+ 
+export default async function Page({ params }: { params: { userId: string } }) {
+  const getCachedUser = unstable_cache(
+    async () => {
+      return { id: params.userId }
+    },
+    [params.userId], // add the user ID to the cache key
+    {
+      tags: ['users'],
+      revalidate: 60,
+    }
+  )
+ 
+  //...
+}
+Version History
+Version	Changes
+v14.0.0	unstable_cache introduced.
+Previous
+Legacy APIs
+Next
+unstable_noStore
+
+Was this helpful?
+
+supported.
+Send
+Resources
+Docs
+Learn
+Showcase
+Blog
+Analytics
+Next.js Conf
+Previews
+More
+Next.js Commerce
+Contact Sales
+GitHub
+Releases
+Telemetry
+Governance
+About Vercel
+Next.js + Vercel
+Open Source Software
+GitHub
+X
+Legal
+Privacy Policy
+Cookie Preferences
+Subscribe to our newsletter
+
+Stay updated on new releases and features, guides, and case studies.
+
+Subscribe
+
+© 2024 Vercel, Inc.

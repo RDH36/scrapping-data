@@ -1,0 +1,387 @@
+Skip to content
+Showcase
+Docs
+Blog
+Templates
+Enterprise
+Search documentation...
+Feedback
+Learn
+
+Using App Router
+
+Features available in /app
+
+Using Stable Version
+
+v15.0.2
+
+Getting Started
+Installation
+Project Structure
+Building Your Application
+Routing
+Defining Routes
+Pages
+Layouts and Templates
+Linking and Navigating
+Error Handling
+Loading UI and Streaming
+Redirecting
+Route Groups
+Project Organization
+Dynamic Routes
+Parallel Routes
+Intercepting Routes
+Route Handlers
+Middleware
+Internationalization
+Data Fetching
+Data Fetching and Caching
+Server Actions and Mutations
+Incremental Static Regeneration (ISR)
+Rendering
+Server Components
+Client Components
+Composition Patterns
+Partial Prerendering
+Runtimes
+Caching
+Styling
+CSS
+Tailwind CSS
+Sass
+CSS-in-JS
+Optimizing
+Images
+Videos
+Fonts
+Metadata
+Scripts
+Package Bundling
+Lazy Loading
+Analytics
+Instrumentation
+OpenTelemetry
+Static Assets
+Third Party Libraries
+Memory Usage
+Configuring
+TypeScript
+ESLint
+Environment Variables
+Absolute Imports and Module Path Aliases
+MDX
+src Directory
+Custom Server
+Draft Mode
+Content Security Policy
+Debugging
+Progressive Web Applications (PWA)
+Testing
+Vitest
+Jest
+Playwright
+Cypress
+Authentication
+Deploying
+Production Checklist
+Static Exports
+Multi-Zones
+Upgrading
+Codemods
+Version 15
+Version 14
+App Router Migration
+Migrating from Create React App
+Migrating from Vite
+Examples
+API Reference
+Directives
+use cache
+use client
+use server
+Components
+Font
+<Form>
+<Image>
+<Link>
+<Script>
+File Conventions
+default.js
+error.js
+instrumentation.js
+layout.js
+loading.js
+mdx-components.js
+middleware.js
+not-found.js
+page.js
+route.js
+Route Segment Config
+template.js
+Metadata Files
+favicon, icon, and apple-icon
+manifest.json
+opengraph-image and twitter-image
+robots.txt
+sitemap.xml
+Functions
+cacheTag
+connection
+cookies
+draftMode
+fetch
+generateImageMetadata
+generateMetadata
+generateSitemaps
+generateStaticParams
+generateViewport
+headers
+ImageResponse
+NextRequest
+NextResponse
+notFound
+permanentRedirect
+redirect
+revalidatePath
+revalidateTag
+unstable_after
+unstable_rethrow
+useParams
+usePathname
+useReportWebVitals
+useRouter
+useSearchParams
+useSelectedLayoutSegment
+useSelectedLayoutSegments
+userAgent
+next.config.js Options
+appDir
+assetPrefix
+basePath
+cacheLife
+compress
+crossOrigin
+cssChunking
+devIndicators
+distDir
+dynamicIO
+env
+eslint
+expireTime
+exportPathMap
+generateBuildId
+generateEtags
+headers
+httpAgentOptions
+images
+cacheHandler
+logging
+mdxRs
+onDemandEntries
+optimizePackageImports
+output
+pageExtensions
+poweredByHeader
+ppr
+productionBrowserSourceMaps
+reactCompiler
+reactMaxHeadersLength
+reactStrictMode
+redirects
+rewrites
+sassOptions
+serverActions
+serverComponentsHmrCache
+serverExternalPackages
+staleTimes
+staticGeneration*
+trailingSlash
+transpilePackages
+turbo
+typedRoutes
+typescript
+urlImports
+useLightningcss
+webpack
+webVitalsAttribution
+CLI
+create-next-app
+next CLI
+Edge Runtime
+Legacy APIs
+unstable_cache
+unstable_noStore
+Architecture
+Accessibility
+Fast Refresh
+Next.js Compiler
+Supported Browsers
+Turbopack
+Community
+Contribution Guide
+On this page
+Convention
+Example
+Good to know
+Generating Static Params
+Catch-all Segments
+Optional Catch-all Segments
+TypeScript
+Next Steps
+Managed Next.js (Vercel)
+Scroll to top
+Building Your Application
+Routing
+Dynamic Routes
+Dynamic Routes
+
+When you don't know the exact segment names ahead of time and want to create routes from dynamic data, you can use Dynamic Segments that are filled in at request time or prerendered at build time.
+
+Convention
+
+A Dynamic Segment can be created by wrapping a folder's name in square brackets: [folderName]. For example, [id] or [slug].
+
+Dynamic Segments are passed as the params prop to layout, page, route, and generateMetadata functions.
+
+Example
+
+For example, a blog could include the following route app/blog/[slug]/page.js where [slug] is the Dynamic Segment for blog posts.
+
+app/blog/[slug]/page.tsx
+TypeScript
+JavaScript
+TypeScript
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  const slug = (await params).slug
+  return <div>My Post: {slug}</div>
+}
+Route	Example URL	params
+app/blog/[slug]/page.js	/blog/a	{ slug: 'a' }
+app/blog/[slug]/page.js	/blog/b	{ slug: 'b' }
+app/blog/[slug]/page.js	/blog/c	{ slug: 'c' }
+
+See the generateStaticParams() page to learn how to generate the params for the segment.
+
+Good to know
+Since the params prop is a promise. You must use async/await or React's use function to access the values.
+In version 14 and earlier, params was a synchronous prop. To help with backwards compatability, you can still access it synchronously in Next.js 15, but this behavior will be deprecated in the future.
+Dynamic Segments are equivalent to Dynamic Routes in the pages directory.
+Generating Static Params
+
+The generateStaticParams function can be used in combination with dynamic route segments to statically generate routes at build time instead of on-demand at request time.
+
+app/blog/[slug]/page.tsx
+TypeScript
+JavaScript
+TypeScript
+export async function generateStaticParams() {
+  const posts = await fetch('https://.../posts').then((res) => res.json())
+ 
+  return posts.map((post) => ({
+    slug: post.slug,
+  }))
+}
+
+The primary benefit of the generateStaticParams function is its smart retrieval of data. If content is fetched within the generateStaticParams function using a fetch request, the requests are automatically memoized. This means a fetch request with the same arguments across multiple generateStaticParams, Layouts, and Pages will only be made once, which decreases build times.
+
+Use the migration guide if you are migrating from the pages directory.
+
+See generateStaticParams server function documentation for more information and advanced use cases.
+
+Catch-all Segments
+
+Dynamic Segments can be extended to catch-all subsequent segments by adding an ellipsis inside the brackets [...folderName].
+
+For example, app/shop/[...slug]/page.js will match /shop/clothes, but also /shop/clothes/tops, /shop/clothes/tops/t-shirts, and so on.
+
+Route	Example URL	params
+app/shop/[...slug]/page.js	/shop/a	{ slug: ['a'] }
+app/shop/[...slug]/page.js	/shop/a/b	{ slug: ['a', 'b'] }
+app/shop/[...slug]/page.js	/shop/a/b/c	{ slug: ['a', 'b', 'c'] }
+Optional Catch-all Segments
+
+Catch-all Segments can be made optional by including the parameter in double square brackets: [[...folderName]].
+
+For example, app/shop/[[...slug]]/page.js will also match /shop, in addition to /shop/clothes, /shop/clothes/tops, /shop/clothes/tops/t-shirts.
+
+The difference between catch-all and optional catch-all segments is that with optional, the route without the parameter is also matched (/shop in the example above).
+
+Route	Example URL	params
+app/shop/[[...slug]]/page.js	/shop	{ slug: undefined }
+app/shop/[[...slug]]/page.js	/shop/a	{ slug: ['a'] }
+app/shop/[[...slug]]/page.js	/shop/a/b	{ slug: ['a', 'b'] }
+app/shop/[[...slug]]/page.js	/shop/a/b/c	{ slug: ['a', 'b', 'c'] }
+TypeScript
+
+When using TypeScript, you can add types for params depending on your configured route segment.
+
+app/blog/[slug]/page.tsx
+TypeScript
+JavaScript
+TypeScript
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  return <h1>My Page</h1>
+}
+Route	params Type Definition
+app/blog/[slug]/page.js	{ slug: string }
+app/shop/[...slug]/page.js	{ slug: string[] }
+app/shop/[[...slug]]/page.js	{ slug?: string[] }
+app/[categoryId]/[itemId]/page.js	{ categoryId: string, itemId: string }
+
+Good to know: This may be done automatically by the TypeScript plugin in the future.
+
+Next Steps
+For more information on what to do next, we recommend the following sections
+Linking and Navigating
+Learn how navigation works in Next.js, and how to use the Link Component and `useRouter` hook.
+generateStaticParams
+API reference for the generateStaticParams function.
+Previous
+Project Organization
+Next
+Parallel Routes
+
+Was this helpful?
+
+supported.
+Send
+Resources
+Docs
+Learn
+Showcase
+Blog
+Analytics
+Next.js Conf
+Previews
+More
+Next.js Commerce
+Contact Sales
+GitHub
+Releases
+Telemetry
+Governance
+About Vercel
+Next.js + Vercel
+Open Source Software
+GitHub
+X
+Legal
+Privacy Policy
+Cookie Preferences
+Subscribe to our newsletter
+
+Stay updated on new releases and features, guides, and case studies.
+
+Subscribe
+
+© 2024 Vercel, Inc.

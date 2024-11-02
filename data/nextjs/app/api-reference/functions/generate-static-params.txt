@@ -1,0 +1,549 @@
+Skip to content
+Showcase
+Docs
+Blog
+Templates
+Enterprise
+Search documentation...
+Feedback
+Learn
+
+Using App Router
+
+Features available in /app
+
+Using Stable Version
+
+v15.0.2
+
+Getting Started
+Installation
+Project Structure
+Building Your Application
+Routing
+Defining Routes
+Pages
+Layouts and Templates
+Linking and Navigating
+Error Handling
+Loading UI and Streaming
+Redirecting
+Route Groups
+Project Organization
+Dynamic Routes
+Parallel Routes
+Intercepting Routes
+Route Handlers
+Middleware
+Internationalization
+Data Fetching
+Data Fetching and Caching
+Server Actions and Mutations
+Incremental Static Regeneration (ISR)
+Rendering
+Server Components
+Client Components
+Composition Patterns
+Partial Prerendering
+Runtimes
+Caching
+Styling
+CSS
+Tailwind CSS
+Sass
+CSS-in-JS
+Optimizing
+Images
+Videos
+Fonts
+Metadata
+Scripts
+Package Bundling
+Lazy Loading
+Analytics
+Instrumentation
+OpenTelemetry
+Static Assets
+Third Party Libraries
+Memory Usage
+Configuring
+TypeScript
+ESLint
+Environment Variables
+Absolute Imports and Module Path Aliases
+MDX
+src Directory
+Custom Server
+Draft Mode
+Content Security Policy
+Debugging
+Progressive Web Applications (PWA)
+Testing
+Vitest
+Jest
+Playwright
+Cypress
+Authentication
+Deploying
+Production Checklist
+Static Exports
+Multi-Zones
+Upgrading
+Codemods
+Version 15
+Version 14
+App Router Migration
+Migrating from Create React App
+Migrating from Vite
+Examples
+API Reference
+Directives
+use cache
+use client
+use server
+Components
+Font
+<Form>
+<Image>
+<Link>
+<Script>
+File Conventions
+default.js
+error.js
+instrumentation.js
+layout.js
+loading.js
+mdx-components.js
+middleware.js
+not-found.js
+page.js
+route.js
+Route Segment Config
+template.js
+Metadata Files
+favicon, icon, and apple-icon
+manifest.json
+opengraph-image and twitter-image
+robots.txt
+sitemap.xml
+Functions
+cacheTag
+connection
+cookies
+draftMode
+fetch
+generateImageMetadata
+generateMetadata
+generateSitemaps
+generateStaticParams
+generateViewport
+headers
+ImageResponse
+NextRequest
+NextResponse
+notFound
+permanentRedirect
+redirect
+revalidatePath
+revalidateTag
+unstable_after
+unstable_rethrow
+useParams
+usePathname
+useReportWebVitals
+useRouter
+useSearchParams
+useSelectedLayoutSegment
+useSelectedLayoutSegments
+userAgent
+next.config.js Options
+appDir
+assetPrefix
+basePath
+cacheLife
+compress
+crossOrigin
+cssChunking
+devIndicators
+distDir
+dynamicIO
+env
+eslint
+expireTime
+exportPathMap
+generateBuildId
+generateEtags
+headers
+httpAgentOptions
+images
+cacheHandler
+logging
+mdxRs
+onDemandEntries
+optimizePackageImports
+output
+pageExtensions
+poweredByHeader
+ppr
+productionBrowserSourceMaps
+reactCompiler
+reactMaxHeadersLength
+reactStrictMode
+redirects
+rewrites
+sassOptions
+serverActions
+serverComponentsHmrCache
+serverExternalPackages
+staleTimes
+staticGeneration*
+trailingSlash
+transpilePackages
+turbo
+typedRoutes
+typescript
+urlImports
+useLightningcss
+webpack
+webVitalsAttribution
+CLI
+create-next-app
+next CLI
+Edge Runtime
+Legacy APIs
+unstable_cache
+unstable_noStore
+Architecture
+Accessibility
+Fast Refresh
+Next.js Compiler
+Supported Browsers
+Turbopack
+Community
+Contribution Guide
+On this page
+Parameters
+Returns
+Single Dynamic Segment
+Multiple Dynamic Segments
+Catch-all Dynamic Segment
+Examples
+Static Rendering
+All paths at build time
+Subset of paths at build time
+All paths at runtime
+Disable rendering for unspecified paths
+Multiple Dynamic Segments in a Route
+Generate params from the bottom up
+Generate params from the top down
+Version History
+Managed Next.js (Vercel)
+Scroll to top
+API Reference
+Functions
+generateStaticParams
+generateStaticParams
+
+The generateStaticParams function can be used in combination with dynamic route segments to statically generate routes at build time instead of on-demand at request time.
+
+app/blog/[slug]/page.js
+// Return a list of `params` to populate the [slug] dynamic segment
+export async function generateStaticParams() {
+  const posts = await fetch('https://.../posts').then((res) => res.json())
+ 
+  return posts.map((post) => ({
+    slug: post.slug,
+  }))
+}
+ 
+// Multiple versions of this page will be statically generated
+// using the `params` returned by `generateStaticParams`
+export default async function Page({ params }) {
+  const { slug } = await params
+  // ...
+}
+
+Good to know:
+
+You can use the dynamicParams segment config option to control what happens when a dynamic segment is visited that was not generated with generateStaticParams.
+You must return an empty array from generateStaticParams or utilize export const dynamic = 'force-static' in order to revalidate (ISR) paths at runtime.
+During next dev, generateStaticParams will be called when you navigate to a route.
+During next build, generateStaticParams runs before the corresponding Layouts or Pages are generated.
+During revalidation (ISR), generateStaticParams will not be called again.
+generateStaticParams replaces the getStaticPaths function in the Pages Router.
+Parameters
+
+options.params (optional)
+
+If multiple dynamic segments in a route use generateStaticParams, the child generateStaticParams function is executed once for each set of params the parent generates.
+
+The params object contains the populated params from the parent generateStaticParams, which can be used to generate the params in a child segment.
+
+Returns
+
+generateStaticParams should return an array of objects where each object represents the populated dynamic segments of a single route.
+
+Each property in the object is a dynamic segment to be filled in for the route.
+The properties name is the segment's name, and the properties value is what that segment should be filled in with.
+Example Route	generateStaticParams Return Type
+/product/[id]	{ id: string }[]
+/products/[category]/[product]	{ category: string, product: string }[]
+/products/[...slug]	{ slug: string[] }[]
+Single Dynamic Segment
+app/product/[id]/page.tsx
+TypeScript
+JavaScript
+TypeScript
+export function generateStaticParams() {
+  return [{ id: '1' }, { id: '2' }, { id: '3' }]
+}
+ 
+// Three versions of this page will be statically generated
+// using the `params` returned by `generateStaticParams`
+// - /product/1
+// - /product/2
+// - /product/3
+export default async function Page({ params }: { params: { id: string } }) {
+  const { id } = await params
+  // ...
+}
+Multiple Dynamic Segments
+app/products/[category]/[product]/page.tsx
+TypeScript
+JavaScript
+TypeScript
+export function generateStaticParams() {
+  return [
+    { category: 'a', product: '1' },
+    { category: 'b', product: '2' },
+    { category: 'c', product: '3' },
+  ]
+}
+ 
+// Three versions of this page will be statically generated
+// using the `params` returned by `generateStaticParams`
+// - /products/a/1
+// - /products/b/2
+// - /products/c/3
+export default async function Page({
+  params,
+}: {
+  params: { category: string; product: string }
+}) {
+  const { category, product } = await params
+  // ...
+}
+Catch-all Dynamic Segment
+app/product/[...slug]/page.tsx
+TypeScript
+JavaScript
+TypeScript
+export function generateStaticParams() {
+  return [{ slug: ['a', '1'] }, { slug: ['b', '2'] }, { slug: ['c', '3'] }]
+}
+ 
+// Three versions of this page will be statically generated
+// using the `params` returned by `generateStaticParams`
+// - /product/a/1
+// - /product/b/2
+// - /product/c/3
+export default async function Page({ params }: { params: { slug: string[] } }) {
+  const { slug } = await params
+  // ...
+}
+Examples
+Static Rendering
+All paths at build time
+
+To statically render all paths at build time, supply the full list of paths to generateStaticParams:
+
+app/blog/[slug]/page.tsx
+TypeScript
+JavaScript
+TypeScript
+export async function generateStaticParams() {
+  const posts = await fetch('https://.../posts').then((res) => res.json())
+ 
+  return posts.map((post) => ({
+    slug: post.slug,
+  }))
+}
+Subset of paths at build time
+
+To statically render a subset of paths at build time, and the rest the first time they're visited at runtime, return a partial list of paths:
+
+app/blog/[slug]/page.tsx
+TypeScript
+JavaScript
+TypeScript
+export async function generateStaticParams() {
+  const posts = await fetch('https://.../posts').then((res) => res.json())
+ 
+  // Render the first 10 posts at build time
+  return posts.slice(0, 10).map((post) => ({
+    slug: post.slug,
+  }))
+}
+
+Then, by using the dynamicParams segment config option, you can control what happens when a dynamic segment is visited that was not generated with generateStaticParams.
+
+app/blog/[slug]/page.js
+// All posts besides the top 10 will be a 404
+export const dynamicParams = false
+ 
+export async function generateStaticParams() {
+  const posts = await fetch('https://.../posts').then((res) => res.json())
+  const topPosts = posts.slice(0, 10)
+ 
+  return topPosts.map((post) => ({
+    slug: post.slug,
+  }))
+}
+All paths at runtime
+
+To statically render all paths the first time they're visited, return an empty array (no paths will be rendered at build time) or utilize export const dynamic = 'force-static':
+
+app/blog/[slug]/page.js
+export async function generateStaticParams() {
+  return []
+}
+
+Good to know: You must always return an array from generateStaticParams, even if it's empty. Otherwise, the route will be dynamically rendered.
+
+app/changelog/[slug]/page.js
+export const dynamic = 'force-static'
+Disable rendering for unspecified paths
+
+To prevent unspecified paths from being statically rendered at runtime, add the export const dynamicParams = false option in a route segment. When this config option is used, only paths provided by generateStaticParams will be served, and unspecified routes will 404 or match (in the case of catch-all routes).
+
+Multiple Dynamic Segments in a Route
+
+You can generate params for dynamic segments above the current layout or page, but not below. For example, given the app/products/[category]/[product] route:
+
+app/products/[category]/[product]/page.js can generate params for both [category] and [product].
+app/products/[category]/layout.js can only generate params for [category].
+
+There are two approaches to generating params for a route with multiple dynamic segments:
+
+Generate params from the bottom up
+
+Generate multiple dynamic segments from the child route segment.
+
+app/products/[category]/[product]/page.tsx
+TypeScript
+JavaScript
+TypeScript
+// Generate segments for both [category] and [product]
+export async function generateStaticParams() {
+  const products = await fetch('https://.../products').then((res) => res.json())
+ 
+  return products.map((product) => ({
+    category: product.category.slug,
+    product: product.id,
+  }))
+}
+ 
+export default function Page({
+  params,
+}: {
+  params: { category: string; product: string }
+}) {
+  // ...
+}
+Generate params from the top down
+
+Generate the parent segments first and use the result to generate the child segments.
+
+app/products/[category]/layout.tsx
+TypeScript
+JavaScript
+TypeScript
+// Generate segments for [category]
+export async function generateStaticParams() {
+  const products = await fetch('https://.../products').then((res) => res.json())
+ 
+  return products.map((product) => ({
+    category: product.category.slug,
+  }))
+}
+ 
+export default function Layout({ params }: { params: { category: string } }) {
+  // ...
+}
+
+A child route segment's generateStaticParams function is executed once for each segment a parent generateStaticParams generates.
+
+The child generateStaticParams function can use the params returned from the parent generateStaticParams function to dynamically generate its own segments.
+
+app/products/[category]/[product]/page.tsx
+TypeScript
+JavaScript
+TypeScript
+// Generate segments for [product] using the `params` passed from
+// the parent segment's `generateStaticParams` function
+export async function generateStaticParams({
+  params: { category },
+}: {
+  params: { category: string }
+}) {
+  const products = await fetch(
+    `https://.../products?category=${category}`
+  ).then((res) => res.json())
+ 
+  return products.map((product) => ({
+    product: product.id,
+  }))
+}
+ 
+export default function Page({
+  params,
+}: {
+  params: { category: string; product: string }
+}) {
+  // ...
+}
+
+Good to know: fetch requests are automatically memoized for the same data across all generate-prefixed functions, Layouts, Pages, and Server Components. React cache can be used if fetch is unavailable.
+
+Version History
+Version	Changes
+v13.0.0	generateStaticParams introduced.
+Previous
+generateSitemaps
+Next
+generateViewport
+
+Was this helpful?
+
+supported.
+Send
+Resources
+Docs
+Learn
+Showcase
+Blog
+Analytics
+Next.js Conf
+Previews
+More
+Next.js Commerce
+Contact Sales
+GitHub
+Releases
+Telemetry
+Governance
+About Vercel
+Next.js + Vercel
+Open Source Software
+GitHub
+X
+Legal
+Privacy Policy
+Cookie Preferences
+Subscribe to our newsletter
+
+Stay updated on new releases and features, guides, and case studies.
+
+Subscribe
+
+© 2024 Vercel, Inc.

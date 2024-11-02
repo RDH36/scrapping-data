@@ -1,0 +1,513 @@
+Skip to content
+Showcase
+Docs
+Blog
+Templates
+Enterprise
+Search documentation...
+Feedback
+Learn
+
+Using App Router
+
+Features available in /app
+
+Using Stable Version
+
+v15.0.2
+
+Getting Started
+Installation
+Project Structure
+Building Your Application
+Routing
+Defining Routes
+Pages
+Layouts and Templates
+Linking and Navigating
+Error Handling
+Loading UI and Streaming
+Redirecting
+Route Groups
+Project Organization
+Dynamic Routes
+Parallel Routes
+Intercepting Routes
+Route Handlers
+Middleware
+Internationalization
+Data Fetching
+Data Fetching and Caching
+Server Actions and Mutations
+Incremental Static Regeneration (ISR)
+Rendering
+Server Components
+Client Components
+Composition Patterns
+Partial Prerendering
+Runtimes
+Caching
+Styling
+CSS
+Tailwind CSS
+Sass
+CSS-in-JS
+Optimizing
+Images
+Videos
+Fonts
+Metadata
+Scripts
+Package Bundling
+Lazy Loading
+Analytics
+Instrumentation
+OpenTelemetry
+Static Assets
+Third Party Libraries
+Memory Usage
+Configuring
+TypeScript
+ESLint
+Environment Variables
+Absolute Imports and Module Path Aliases
+MDX
+src Directory
+Custom Server
+Draft Mode
+Content Security Policy
+Debugging
+Progressive Web Applications (PWA)
+Testing
+Vitest
+Jest
+Playwright
+Cypress
+Authentication
+Deploying
+Production Checklist
+Static Exports
+Multi-Zones
+Upgrading
+Codemods
+Version 15
+Version 14
+App Router Migration
+Migrating from Create React App
+Migrating from Vite
+Examples
+API Reference
+Directives
+use cache
+use client
+use server
+Components
+Font
+<Form>
+<Image>
+<Link>
+<Script>
+File Conventions
+default.js
+error.js
+instrumentation.js
+layout.js
+loading.js
+mdx-components.js
+middleware.js
+not-found.js
+page.js
+route.js
+Route Segment Config
+template.js
+Metadata Files
+favicon, icon, and apple-icon
+manifest.json
+opengraph-image and twitter-image
+robots.txt
+sitemap.xml
+Functions
+cacheTag
+connection
+cookies
+draftMode
+fetch
+generateImageMetadata
+generateMetadata
+generateSitemaps
+generateStaticParams
+generateViewport
+headers
+ImageResponse
+NextRequest
+NextResponse
+notFound
+permanentRedirect
+redirect
+revalidatePath
+revalidateTag
+unstable_after
+unstable_rethrow
+useParams
+usePathname
+useReportWebVitals
+useRouter
+useSearchParams
+useSelectedLayoutSegment
+useSelectedLayoutSegments
+userAgent
+next.config.js Options
+appDir
+assetPrefix
+basePath
+cacheLife
+compress
+crossOrigin
+cssChunking
+devIndicators
+distDir
+dynamicIO
+env
+eslint
+expireTime
+exportPathMap
+generateBuildId
+generateEtags
+headers
+httpAgentOptions
+images
+cacheHandler
+logging
+mdxRs
+onDemandEntries
+optimizePackageImports
+output
+pageExtensions
+poweredByHeader
+ppr
+productionBrowserSourceMaps
+reactCompiler
+reactMaxHeadersLength
+reactStrictMode
+redirects
+rewrites
+sassOptions
+serverActions
+serverComponentsHmrCache
+serverExternalPackages
+staleTimes
+staticGeneration*
+trailingSlash
+transpilePackages
+turbo
+typedRoutes
+typescript
+urlImports
+useLightningcss
+webpack
+webVitalsAttribution
+CLI
+create-next-app
+next CLI
+Edge Runtime
+Legacy APIs
+unstable_cache
+unstable_noStore
+Architecture
+Accessibility
+Fast Refresh
+Next.js Compiler
+Supported Browsers
+Turbopack
+Community
+Contribution Guide
+On this page
+Parameters
+Returns
+Behavior
+Static Rendering
+Dynamic Rendering
+Server Components
+Pages
+Layouts
+Examples
+Updating searchParams
+Version History
+Managed Next.js (Vercel)
+Scroll to top
+API Reference
+Functions
+useSearchParams
+useSearchParams
+
+useSearchParams is a Client Component hook that lets you read the current URL's query string.
+
+useSearchParams returns a read-only version of the URLSearchParams
+ interface.
+
+app/dashboard/search-bar.tsx
+TypeScript
+JavaScript
+TypeScript
+'use client'
+ 
+import { useSearchParams } from 'next/navigation'
+ 
+export default function SearchBar() {
+  const searchParams = useSearchParams()
+ 
+  const search = searchParams.get('search')
+ 
+  // URL -> `/dashboard?search=my-project`
+  // `search` -> 'my-project'
+  return <>Search: {search}</>
+}
+Parameters
+const searchParams = useSearchParams()
+
+useSearchParams does not take any parameters.
+
+Returns
+
+useSearchParams returns a read-only version of the URLSearchParams
+ interface, which includes utility methods for reading the URL's query string:
+
+URLSearchParams.get()
+: Returns the first value associated with the search parameter. For example:
+
+URL	searchParams.get("a")
+/dashboard?a=1	'1'
+/dashboard?a=	''
+/dashboard?b=3	null
+/dashboard?a=1&a=2	'1' - use getAll()
+ to get all values
+
+URLSearchParams.has()
+: Returns a boolean value indicating if the given parameter exists. For example:
+
+URL	searchParams.has("a")
+/dashboard?a=1	true
+/dashboard?b=3	false
+
+Learn more about other read-only methods of URLSearchParams
+, including the getAll()
+, keys()
+, values()
+, entries()
+, forEach()
+, and toString()
+.
+
+Good to know:
+
+useSearchParams is a Client Component hook and is not supported in Server Components to prevent stale values during partial rendering.
+If an application includes the /pages directory, useSearchParams will return ReadonlyURLSearchParams | null. The null value is for compatibility during migration since search params cannot be known during pre-rendering of a page that doesn't use getServerSideProps
+Behavior
+Static Rendering
+
+If a route is statically rendered, calling useSearchParams will cause the Client Component tree up to the closest Suspense boundary to be client-side rendered.
+
+This allows a part of the route to be statically rendered while the dynamic part that uses useSearchParams is client-side rendered.
+
+We recommend wrapping the Client Component that uses useSearchParams in a <Suspense/> boundary. This will allow any Client Components above it to be statically rendered and sent as part of initial HTML. Example.
+
+For example:
+
+app/dashboard/search-bar.tsx
+TypeScript
+JavaScript
+TypeScript
+'use client'
+ 
+import { useSearchParams } from 'next/navigation'
+ 
+export default function SearchBar() {
+  const searchParams = useSearchParams()
+ 
+  const search = searchParams.get('search')
+ 
+  // This will not be logged on the server when using static rendering
+  console.log(search)
+ 
+  return <>Search: {search}</>
+}
+app/dashboard/page.tsx
+TypeScript
+JavaScript
+TypeScript
+import { Suspense } from 'react'
+import SearchBar from './search-bar'
+ 
+// This component passed as a fallback to the Suspense boundary
+// will be rendered in place of the search bar in the initial HTML.
+// When the value is available during React hydration the fallback
+// will be replaced with the `<SearchBar>` component.
+function SearchBarFallback() {
+  return <>placeholder</>
+}
+ 
+export default function Page() {
+  return (
+    <>
+      <nav>
+        <Suspense fallback={<SearchBarFallback />}>
+          <SearchBar />
+        </Suspense>
+      </nav>
+      <h1>Dashboard</h1>
+    </>
+  )
+}
+Dynamic Rendering
+
+If a route is dynamically rendered, useSearchParams will be available on the server during the initial server render of the Client Component.
+
+For example:
+
+app/dashboard/search-bar.tsx
+TypeScript
+JavaScript
+TypeScript
+'use client'
+ 
+import { useSearchParams } from 'next/navigation'
+ 
+export default function SearchBar() {
+  const searchParams = useSearchParams()
+ 
+  const search = searchParams.get('search')
+ 
+  // This will be logged on the server during the initial render
+  // and on the client on subsequent navigations.
+  console.log(search)
+ 
+  return <>Search: {search}</>
+}
+app/dashboard/page.tsx
+TypeScript
+JavaScript
+TypeScript
+import SearchBar from './search-bar'
+ 
+export const dynamic = 'force-dynamic'
+ 
+export default function Page() {
+  return (
+    <>
+      <nav>
+        <SearchBar />
+      </nav>
+      <h1>Dashboard</h1>
+    </>
+  )
+}
+
+Good to know: Setting the dynamic route segment config option to force-dynamic can be used to force dynamic rendering.
+
+Server Components
+Pages
+
+To access search params in Pages (Server Components), use the searchParams prop.
+
+Layouts
+
+Unlike Pages, Layouts (Server Components) do not receive the searchParams prop. This is because a shared layout is not re-rendered during navigation which could lead to stale searchParams between navigations. View detailed explanation.
+
+Instead, use the Page searchParams prop or the useSearchParams hook in a Client Component, which is re-rendered on the client with the latest searchParams.
+
+Examples
+Updating searchParams
+
+You can use useRouter or Link to set new searchParams. After a navigation is performed, the current page.js will receive an updated searchParams prop.
+
+app/example-client-component.tsx
+TypeScript
+JavaScript
+TypeScript
+'use client'
+ 
+export default function ExampleClientComponent() {
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+ 
+  // Get a new searchParams string by merging the current
+  // searchParams with a provided key/value pair
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString())
+      params.set(name, value)
+ 
+      return params.toString()
+    },
+    [searchParams]
+  )
+ 
+  return (
+    <>
+      <p>Sort By</p>
+ 
+      {/* using useRouter */}
+      <button
+        onClick={() => {
+          // <pathname>?sort=asc
+          router.push(pathname + '?' + createQueryString('sort', 'asc'))
+        }}
+      >
+        ASC
+      </button>
+ 
+      {/* using <Link> */}
+      <Link
+        href={
+          // <pathname>?sort=desc
+          pathname + '?' + createQueryString('sort', 'desc')
+        }
+      >
+        DESC
+      </Link>
+    </>
+  )
+}
+Version History
+Version	Changes
+v13.0.0	useSearchParams introduced.
+Previous
+useRouter
+Next
+useSelectedLayoutSegment
+
+Was this helpful?
+
+supported.
+Send
+Resources
+Docs
+Learn
+Showcase
+Blog
+Analytics
+Next.js Conf
+Previews
+More
+Next.js Commerce
+Contact Sales
+GitHub
+Releases
+Telemetry
+Governance
+About Vercel
+Next.js + Vercel
+Open Source Software
+GitHub
+X
+Legal
+Privacy Policy
+Cookie Preferences
+Subscribe to our newsletter
+
+Stay updated on new releases and features, guides, and case studies.
+
+Subscribe
+
+© 2024 Vercel, Inc.

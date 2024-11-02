@@ -1,0 +1,413 @@
+Skip to content
+Showcase
+Docs
+Blog
+Templates
+Enterprise
+Search documentation...
+Feedback
+Learn
+
+Using App Router
+
+Features available in /app
+
+Using Stable Version
+
+v15.0.2
+
+Getting Started
+Installation
+Project Structure
+Building Your Application
+Routing
+Defining Routes
+Pages
+Layouts and Templates
+Linking and Navigating
+Error Handling
+Loading UI and Streaming
+Redirecting
+Route Groups
+Project Organization
+Dynamic Routes
+Parallel Routes
+Intercepting Routes
+Route Handlers
+Middleware
+Internationalization
+Data Fetching
+Data Fetching and Caching
+Server Actions and Mutations
+Incremental Static Regeneration (ISR)
+Rendering
+Server Components
+Client Components
+Composition Patterns
+Partial Prerendering
+Runtimes
+Caching
+Styling
+CSS
+Tailwind CSS
+Sass
+CSS-in-JS
+Optimizing
+Images
+Videos
+Fonts
+Metadata
+Scripts
+Package Bundling
+Lazy Loading
+Analytics
+Instrumentation
+OpenTelemetry
+Static Assets
+Third Party Libraries
+Memory Usage
+Configuring
+TypeScript
+ESLint
+Environment Variables
+Absolute Imports and Module Path Aliases
+MDX
+src Directory
+Custom Server
+Draft Mode
+Content Security Policy
+Debugging
+Progressive Web Applications (PWA)
+Testing
+Vitest
+Jest
+Playwright
+Cypress
+Authentication
+Deploying
+Production Checklist
+Static Exports
+Multi-Zones
+Upgrading
+Codemods
+Version 15
+Version 14
+App Router Migration
+Migrating from Create React App
+Migrating from Vite
+Examples
+API Reference
+Directives
+use cache
+use client
+use server
+Components
+Font
+<Form>
+<Image>
+<Link>
+<Script>
+File Conventions
+default.js
+error.js
+instrumentation.js
+layout.js
+loading.js
+mdx-components.js
+middleware.js
+not-found.js
+page.js
+route.js
+Route Segment Config
+template.js
+Metadata Files
+favicon, icon, and apple-icon
+manifest.json
+opengraph-image and twitter-image
+robots.txt
+sitemap.xml
+Functions
+cacheTag
+connection
+cookies
+draftMode
+fetch
+generateImageMetadata
+generateMetadata
+generateSitemaps
+generateStaticParams
+generateViewport
+headers
+ImageResponse
+NextRequest
+NextResponse
+notFound
+permanentRedirect
+redirect
+revalidatePath
+revalidateTag
+unstable_after
+unstable_rethrow
+useParams
+usePathname
+useReportWebVitals
+useRouter
+useSearchParams
+useSelectedLayoutSegment
+useSelectedLayoutSegments
+userAgent
+next.config.js Options
+appDir
+assetPrefix
+basePath
+cacheLife
+compress
+crossOrigin
+cssChunking
+devIndicators
+distDir
+dynamicIO
+env
+eslint
+expireTime
+exportPathMap
+generateBuildId
+generateEtags
+headers
+httpAgentOptions
+images
+cacheHandler
+logging
+mdxRs
+onDemandEntries
+optimizePackageImports
+output
+pageExtensions
+poweredByHeader
+ppr
+productionBrowserSourceMaps
+reactCompiler
+reactMaxHeadersLength
+reactStrictMode
+redirects
+rewrites
+sassOptions
+serverActions
+serverComponentsHmrCache
+serverExternalPackages
+staleTimes
+staticGeneration*
+trailingSlash
+transpilePackages
+turbo
+typedRoutes
+typescript
+urlImports
+useLightningcss
+webpack
+webVitalsAttribution
+CLI
+create-next-app
+next CLI
+Edge Runtime
+Legacy APIs
+unstable_cache
+unstable_noStore
+Architecture
+Accessibility
+Fast Refresh
+Next.js Compiler
+Supported Browsers
+Turbopack
+Community
+Contribution Guide
+On this page
+useReportWebVitals
+Web Vitals
+Custom Metrics
+Usage on Vercel
+Sending results to external systems
+Managed Next.js (Vercel)
+Scroll to top
+API Reference
+Functions
+useReportWebVitals
+useReportWebVitals
+
+The useReportWebVitals hook allows you to report Core Web Vitals
+, and can be used in combination with your analytics service.
+
+pages/_app.js
+import { useReportWebVitals } from 'next/web-vitals'
+ 
+function MyApp({ Component, pageProps }) {
+  useReportWebVitals((metric) => {
+    console.log(metric)
+  })
+ 
+  return <Component {...pageProps} />
+}
+useReportWebVitals
+
+The metric object passed as the hook's argument consists of a number of properties:
+
+id: Unique identifier for the metric in the context of the current page load
+name: The name of the performance metric. Possible values include names of Web Vitals metrics (TTFB, FCP, LCP, FID, CLS) specific to a web application.
+delta: The difference between the current value and the previous value of the metric. The value is typically in milliseconds and represents the change in the metric's value over time.
+entries: An array of Performance Entries
+ associated with the metric. These entries provide detailed information about the performance events related to the metric.
+navigationType: Indicates the type of navigation
+ that triggered the metric collection. Possible values include "navigate", "reload", "back_forward", and "prerender".
+rating: A qualitative rating of the metric value, providing an assessment of the performance. Possible values are "good", "needs-improvement", and "poor". The rating is typically determined by comparing the metric value against predefined thresholds that indicate acceptable or suboptimal performance.
+value: The actual value or duration of the performance entry, typically in milliseconds. The value provides a quantitative measure of the performance aspect being tracked by the metric. The source of the value depends on the specific metric being measured and can come from various Performance API
+s.
+Web Vitals
+
+Web Vitals
+ are a set of useful metrics that aim to capture the user experience of a web page. The following web vitals are all included:
+
+Time to First Byte
+ (TTFB)
+First Contentful Paint
+ (FCP)
+Largest Contentful Paint
+ (LCP)
+First Input Delay
+ (FID)
+Cumulative Layout Shift
+ (CLS)
+Interaction to Next Paint
+ (INP)
+
+You can handle all the results of these metrics using the name property.
+
+pages/_app.js
+import { useReportWebVitals } from 'next/web-vitals'
+ 
+function MyApp({ Component, pageProps }) {
+  useReportWebVitals((metric) => {
+    switch (metric.name) {
+      case 'FCP': {
+        // handle FCP results
+      }
+      case 'LCP': {
+        // handle LCP results
+      }
+      // ...
+    }
+  })
+ 
+  return <Component {...pageProps} />
+}
+Custom Metrics
+
+In addition to the core metrics listed above, there are some additional custom metrics that measure the time it takes for the page to hydrate and render:
+
+Next.js-hydration: Length of time it takes for the page to start and finish hydrating (in ms)
+Next.js-route-change-to-render: Length of time it takes for a page to start rendering after a route change (in ms)
+Next.js-render: Length of time it takes for a page to finish render after a route change (in ms)
+
+You can handle all the results of these metrics separately:
+
+pages/_app.js
+import { useReportWebVitals } from 'next/web-vitals'
+ 
+function MyApp({ Component, pageProps }) {
+  useReportWebVitals((metric) => {
+    switch (metric.name) {
+      case 'Next.js-hydration':
+        // handle hydration results
+        break
+      case 'Next.js-route-change-to-render':
+        // handle route-change to render results
+        break
+      case 'Next.js-render':
+        // handle render results
+        break
+      default:
+        break
+    }
+  })
+ 
+  return <Component {...pageProps} />
+}
+
+These metrics work in all browsers that support the User Timing API
+.
+
+Usage on Vercel
+
+Vercel Speed Insights
+ does not useReportWebVitals, but @vercel/speed-insights package instead. useReportWebVitals hook is useful in local development, or if you're using a different service for collecting Web Vitals.
+
+Sending results to external systems
+
+You can send results to any endpoint to measure and track real user performance on your site. For example:
+
+useReportWebVitals((metric) => {
+  const body = JSON.stringify(metric)
+  const url = 'https://example.com/analytics'
+ 
+  // Use `navigator.sendBeacon()` if available, falling back to `fetch()`.
+  if (navigator.sendBeacon) {
+    navigator.sendBeacon(url, body)
+  } else {
+    fetch(url, { body, method: 'POST', keepalive: true })
+  }
+})
+
+Good to know: If you use Google Analytics
+, using the id value can allow you to construct metric distributions manually (to calculate percentiles, etc.)
+
+useReportWebVitals(metric => {
+  // Use `window.gtag` if you initialized Google Analytics as this example:
+  // https://github.com/vercel/next.js/blob/canary/examples/with-google-analytics
+  window.gtag('event', metric.name, {
+    value: Math.round(metric.name === 'CLS' ? metric.value * 1000 : metric.value), // values must be integers
+    event_label: metric.id, // id unique to current page load
+    non_interaction: true, // avoids affecting bounce rate.
+  });
+}
+
+Read more about sending results to Google Analytics
+.
+
+Previous
+useAmp
+Next
+useRouter
+
+Was this helpful?
+
+supported.
+Send
+Resources
+Docs
+Learn
+Showcase
+Blog
+Analytics
+Next.js Conf
+Previews
+More
+Next.js Commerce
+Contact Sales
+GitHub
+Releases
+Telemetry
+Governance
+About Vercel
+Next.js + Vercel
+Open Source Software
+GitHub
+X
+Legal
+Privacy Policy
+Cookie Preferences
+Subscribe to our newsletter
+
+Stay updated on new releases and features, guides, and case studies.
+
+Subscribe
+
+© 2024 Vercel, Inc.

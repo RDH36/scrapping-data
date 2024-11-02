@@ -1,0 +1,423 @@
+Skip to content
+Showcase
+Docs
+Blog
+Templates
+Enterprise
+Search documentation...
+Feedback
+Learn
+
+Using App Router
+
+Features available in /app
+
+Using Stable Version
+
+v15.0.2
+
+Getting Started
+Installation
+Project Structure
+Building Your Application
+Routing
+Defining Routes
+Pages
+Layouts and Templates
+Linking and Navigating
+Error Handling
+Loading UI and Streaming
+Redirecting
+Route Groups
+Project Organization
+Dynamic Routes
+Parallel Routes
+Intercepting Routes
+Route Handlers
+Middleware
+Internationalization
+Data Fetching
+Data Fetching and Caching
+Server Actions and Mutations
+Incremental Static Regeneration (ISR)
+Rendering
+Server Components
+Client Components
+Composition Patterns
+Partial Prerendering
+Runtimes
+Caching
+Styling
+CSS
+Tailwind CSS
+Sass
+CSS-in-JS
+Optimizing
+Images
+Videos
+Fonts
+Metadata
+Scripts
+Package Bundling
+Lazy Loading
+Analytics
+Instrumentation
+OpenTelemetry
+Static Assets
+Third Party Libraries
+Memory Usage
+Configuring
+TypeScript
+ESLint
+Environment Variables
+Absolute Imports and Module Path Aliases
+MDX
+src Directory
+Custom Server
+Draft Mode
+Content Security Policy
+Debugging
+Progressive Web Applications (PWA)
+Testing
+Vitest
+Jest
+Playwright
+Cypress
+Authentication
+Deploying
+Production Checklist
+Static Exports
+Multi-Zones
+Upgrading
+Codemods
+Version 15
+Version 14
+App Router Migration
+Migrating from Create React App
+Migrating from Vite
+Examples
+API Reference
+Directives
+use cache
+use client
+use server
+Components
+Font
+<Form>
+<Image>
+<Link>
+<Script>
+File Conventions
+default.js
+error.js
+instrumentation.js
+layout.js
+loading.js
+mdx-components.js
+middleware.js
+not-found.js
+page.js
+route.js
+Route Segment Config
+template.js
+Metadata Files
+favicon, icon, and apple-icon
+manifest.json
+opengraph-image and twitter-image
+robots.txt
+sitemap.xml
+Functions
+cacheTag
+connection
+cookies
+draftMode
+fetch
+generateImageMetadata
+generateMetadata
+generateSitemaps
+generateStaticParams
+generateViewport
+headers
+ImageResponse
+NextRequest
+NextResponse
+notFound
+permanentRedirect
+redirect
+revalidatePath
+revalidateTag
+unstable_after
+unstable_rethrow
+useParams
+usePathname
+useReportWebVitals
+useRouter
+useSearchParams
+useSelectedLayoutSegment
+useSelectedLayoutSegments
+userAgent
+next.config.js Options
+appDir
+assetPrefix
+basePath
+cacheLife
+compress
+crossOrigin
+cssChunking
+devIndicators
+distDir
+dynamicIO
+env
+eslint
+expireTime
+exportPathMap
+generateBuildId
+generateEtags
+headers
+httpAgentOptions
+images
+cacheHandler
+logging
+mdxRs
+onDemandEntries
+optimizePackageImports
+output
+pageExtensions
+poweredByHeader
+ppr
+productionBrowserSourceMaps
+reactCompiler
+reactMaxHeadersLength
+reactStrictMode
+redirects
+rewrites
+sassOptions
+serverActions
+serverComponentsHmrCache
+serverExternalPackages
+staleTimes
+staticGeneration*
+trailingSlash
+transpilePackages
+turbo
+typedRoutes
+typescript
+urlImports
+useLightningcss
+webpack
+webVitalsAttribution
+CLI
+create-next-app
+next CLI
+Edge Runtime
+Legacy APIs
+unstable_cache
+unstable_noStore
+Architecture
+Accessibility
+Fast Refresh
+Next.js Compiler
+Supported Browsers
+Turbopack
+Community
+Contribution Guide
+On this page
+CSS Modules
+Example
+Global Styles
+External Stylesheets
+Ordering and Merging
+Additional Features
+Managed Next.js (Vercel)
+Scroll to top
+App Router
+Building Your Application
+Styling
+CSS
+
+Next.js supports multiple ways of handling CSS, including:
+
+CSS Modules
+Global Styles
+External Stylesheets
+CSS Modules
+
+Next.js has built-in support for CSS Modules using the .module.css extension.
+
+CSS Modules locally scope CSS by automatically creating a unique class name. This allows you to use the same class name in different files without worrying about collisions. This behavior makes CSS Modules the ideal way to include component-level CSS.
+
+Example
+
+CSS Modules can be imported into any file inside the app directory:
+
+app/dashboard/layout.tsx
+TypeScript
+JavaScript
+TypeScript
+import styles from './styles.module.css'
+ 
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return <section className={styles.dashboard}>{children}</section>
+}
+app/dashboard/styles.module.css
+.dashboard {
+  padding: 24px;
+}
+
+CSS Modules are only enabled for files with the .module.css and .module.sass extensions.
+
+In production, all CSS Module files will be automatically concatenated into many minified and code-split .css files. These .css files represent hot execution paths in your application, ensuring the minimal amount of CSS is loaded for your application to paint.
+
+Global Styles
+
+Global styles can be imported into any layout, page, or component inside the app directory.
+
+Good to know:
+
+This is different from the pages directory, where you can only import global styles inside the _app.js file.
+Next.js does not support usage of global styles unless they are actually global, meaning they can apply to all pages and can live for the lifetime of the application. This is because Next.js uses React's built-in support for stylesheets to integrate with Suspense. This built-in support currently does not remove stylesheets as you navigate between routes. Because of this, we recommend using CSS Modules over global styles.
+
+For example, consider a stylesheet named app/global.css:
+
+app/global.css
+body {
+  padding: 20px 20px 60px;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+Inside the root layout (app/layout.js), import the global.css stylesheet to apply the styles to every route in your application:
+
+app/layout.tsx
+TypeScript
+JavaScript
+TypeScript
+// These styles apply to every route in the application
+import './global.css'
+ 
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  )
+}
+External Stylesheets
+
+Stylesheets published by external packages can be imported anywhere in the app directory, including colocated components:
+
+app/layout.tsx
+TypeScript
+JavaScript
+TypeScript
+import 'bootstrap/dist/css/bootstrap.css'
+ 
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="en">
+      <body className="container">{children}</body>
+    </html>
+  )
+}
+
+Good to know: External stylesheets must be directly imported from an npm package or downloaded and colocated with your codebase. You cannot use <link rel="stylesheet" />.
+
+Ordering and Merging
+
+Next.js optimizes CSS during production builds by automatically chunking (merging) stylesheets. The CSS order is determined by the order in which you import the stylesheets into your application code.
+
+For example, base-button.module.css will be ordered before page.module.css since <BaseButton> is imported first in <Page>:
+
+base-button.tsx
+TypeScript
+JavaScript
+TypeScript
+import styles from './base-button.module.css'
+ 
+export function BaseButton() {
+  return <button className={styles.primary} />
+}
+page.ts
+TypeScript
+JavaScript
+TypeScript
+import { BaseButton } from './base-button'
+import styles from './page.module.css'
+ 
+export function Page() {
+  return <BaseButton className={styles.primary} />
+}
+
+To maintain a predictable order, we recommend the following:
+
+Only import a CSS file in a single JS/TS file.
+If using global class names, import the global styles in the same file in the order you want them to be applied.
+Prefer CSS Modules over global styles.
+Use a consistent naming convention for your CSS modules. For example, using <name>.module.css over <name>.tsx.
+Extract shared styles into a separate shared component.
+If using Tailwind, import the stylesheet at the top of the file, preferably in the Root Layout.
+Turn off any linters/formatters (e.g., ESLint's sort-import
+) that automatically sort your imports. This can inadvertently affect your CSS since CSS import order matters.
+
+Good to know:
+
+CSS ordering can behave differently in development mode, always ensure to check the build (next build) to verify the final CSS order.
+You can use the cssChunking option in next.config.js to control how CSS is chunked.
+Additional Features
+
+Next.js includes additional features to improve the authoring experience of adding styles:
+
+When running locally with next dev, local stylesheets (either global or CSS modules) will take advantage of Fast Refresh to instantly reflect changes as edits are saved.
+When building for production with next build, CSS files will be bundled into fewer minified .css files to reduce the number of network requests needed to retrieve styles.
+If you disable JavaScript, styles will still be loaded in the production build (next start). However, JavaScript is still required for next dev to enable Fast Refresh.
+Previous
+Caching
+Next
+CSS
+
+Was this helpful?
+
+supported.
+Send
+Resources
+Docs
+Learn
+Showcase
+Blog
+Analytics
+Next.js Conf
+Previews
+More
+Next.js Commerce
+Contact Sales
+GitHub
+Releases
+Telemetry
+Governance
+About Vercel
+Next.js + Vercel
+Open Source Software
+GitHub
+X
+Legal
+Privacy Policy
+Cookie Preferences
+Subscribe to our newsletter
+
+Stay updated on new releases and features, guides, and case studies.
+
+Subscribe
+
+© 2024 Vercel, Inc.

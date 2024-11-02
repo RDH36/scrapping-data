@@ -1,0 +1,346 @@
+Skip to content
+Showcase
+Docs
+Blog
+Templates
+Enterprise
+Search documentation...
+Feedback
+Learn
+
+Using App Router
+
+Features available in /app
+
+Using Stable Version
+
+v15.0.2
+
+Getting Started
+Installation
+Project Structure
+Building Your Application
+Routing
+Defining Routes
+Pages
+Layouts and Templates
+Linking and Navigating
+Error Handling
+Loading UI and Streaming
+Redirecting
+Route Groups
+Project Organization
+Dynamic Routes
+Parallel Routes
+Intercepting Routes
+Route Handlers
+Middleware
+Internationalization
+Data Fetching
+Data Fetching and Caching
+Server Actions and Mutations
+Incremental Static Regeneration (ISR)
+Rendering
+Server Components
+Client Components
+Composition Patterns
+Partial Prerendering
+Runtimes
+Caching
+Styling
+CSS
+Tailwind CSS
+Sass
+CSS-in-JS
+Optimizing
+Images
+Videos
+Fonts
+Metadata
+Scripts
+Package Bundling
+Lazy Loading
+Analytics
+Instrumentation
+OpenTelemetry
+Static Assets
+Third Party Libraries
+Memory Usage
+Configuring
+TypeScript
+ESLint
+Environment Variables
+Absolute Imports and Module Path Aliases
+MDX
+src Directory
+Custom Server
+Draft Mode
+Content Security Policy
+Debugging
+Progressive Web Applications (PWA)
+Testing
+Vitest
+Jest
+Playwright
+Cypress
+Authentication
+Deploying
+Production Checklist
+Static Exports
+Multi-Zones
+Upgrading
+Codemods
+Version 15
+Version 14
+App Router Migration
+Migrating from Create React App
+Migrating from Vite
+Examples
+API Reference
+Directives
+use cache
+use client
+use server
+Components
+Font
+<Form>
+<Image>
+<Link>
+<Script>
+File Conventions
+default.js
+error.js
+instrumentation.js
+layout.js
+loading.js
+mdx-components.js
+middleware.js
+not-found.js
+page.js
+route.js
+Route Segment Config
+template.js
+Metadata Files
+favicon, icon, and apple-icon
+manifest.json
+opengraph-image and twitter-image
+robots.txt
+sitemap.xml
+Functions
+cacheTag
+connection
+cookies
+draftMode
+fetch
+generateImageMetadata
+generateMetadata
+generateSitemaps
+generateStaticParams
+generateViewport
+headers
+ImageResponse
+NextRequest
+NextResponse
+notFound
+permanentRedirect
+redirect
+revalidatePath
+revalidateTag
+unstable_after
+unstable_rethrow
+useParams
+usePathname
+useReportWebVitals
+useRouter
+useSearchParams
+useSelectedLayoutSegment
+useSelectedLayoutSegments
+userAgent
+next.config.js Options
+appDir
+assetPrefix
+basePath
+cacheLife
+compress
+crossOrigin
+cssChunking
+devIndicators
+distDir
+dynamicIO
+env
+eslint
+expireTime
+exportPathMap
+generateBuildId
+generateEtags
+headers
+httpAgentOptions
+images
+cacheHandler
+logging
+mdxRs
+onDemandEntries
+optimizePackageImports
+output
+pageExtensions
+poweredByHeader
+ppr
+productionBrowserSourceMaps
+reactCompiler
+reactMaxHeadersLength
+reactStrictMode
+redirects
+rewrites
+sassOptions
+serverActions
+serverComponentsHmrCache
+serverExternalPackages
+staleTimes
+staticGeneration*
+trailingSlash
+transpilePackages
+turbo
+typedRoutes
+typescript
+urlImports
+useLightningcss
+webpack
+webVitalsAttribution
+CLI
+create-next-app
+next CLI
+Edge Runtime
+Legacy APIs
+unstable_cache
+unstable_noStore
+Architecture
+Accessibility
+Fast Refresh
+Next.js Compiler
+Supported Browsers
+Turbopack
+Community
+Contribution Guide
+On this page
+AMP First Page
+Hybrid AMP Page
+Managed Next.js (Vercel)
+Scroll to top
+API Reference
+Functions
+useAmp
+useAmp
+Examples
+
+AMP support is one of our advanced features, you can read more about AMP here.
+
+To enable AMP, add the following config to your page:
+
+pages/index.js
+export const config = { amp: true }
+
+The amp config accepts the following values:
+
+true - The page will be AMP-only
+'hybrid' - The page will have two versions, one with AMP and another one with HTML
+
+To learn more about the amp config, read the sections below.
+
+AMP First Page
+
+Take a look at the following example:
+
+pages/about.js
+export const config = { amp: true }
+ 
+function About(props) {
+  return <h3>My AMP About Page!</h3>
+}
+ 
+export default About
+
+The page above is an AMP-only page, which means:
+
+The page has no Next.js or React client-side runtime
+The page is automatically optimized with AMP Optimizer
+, an optimizer that applies the same transformations as AMP caches (improves performance by up to 42%)
+The page has a user-accessible (optimized) version of the page and a search-engine indexable (unoptimized) version of the page
+Hybrid AMP Page
+
+Take a look at the following example:
+
+pages/about.js
+import { useAmp } from 'next/amp'
+ 
+export const config = { amp: 'hybrid' }
+ 
+function About(props) {
+  const isAmp = useAmp()
+ 
+  return (
+    <div>
+      <h3>My AMP About Page!</h3>
+      {isAmp ? (
+        <amp-img
+          width="300"
+          height="300"
+          src="/my-img.jpg"
+          alt="a cool image"
+          layout="responsive"
+        />
+      ) : (
+        <img width="300" height="300" src="/my-img.jpg" alt="a cool image" />
+      )}
+    </div>
+  )
+}
+ 
+export default About
+
+The page above is a hybrid AMP page, which means:
+
+The page is rendered as traditional HTML (default) and AMP HTML (by adding ?amp=1 to the URL)
+The AMP version of the page only has valid optimizations applied with AMP Optimizer so that it is indexable by search-engines
+
+The page uses useAmp to differentiate between modes, it's a React Hook
+ that returns true if the page is using AMP, and false otherwise.
+
+Previous
+NextResponse
+Next
+useReportWebVitals
+
+Was this helpful?
+
+supported.
+Send
+Resources
+Docs
+Learn
+Showcase
+Blog
+Analytics
+Next.js Conf
+Previews
+More
+Next.js Commerce
+Contact Sales
+GitHub
+Releases
+Telemetry
+Governance
+About Vercel
+Next.js + Vercel
+Open Source Software
+GitHub
+X
+Legal
+Privacy Policy
+Cookie Preferences
+Subscribe to our newsletter
+
+Stay updated on new releases and features, guides, and case studies.
+
+Subscribe
+
+© 2024 Vercel, Inc.

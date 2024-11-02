@@ -1,0 +1,402 @@
+Skip to content
+Showcase
+Docs
+Blog
+Templates
+Enterprise
+Search documentation...
+Feedback
+Learn
+
+Using App Router
+
+Features available in /app
+
+Using Stable Version
+
+v15.0.2
+
+Getting Started
+Installation
+Project Structure
+Building Your Application
+Routing
+Defining Routes
+Pages
+Layouts and Templates
+Linking and Navigating
+Error Handling
+Loading UI and Streaming
+Redirecting
+Route Groups
+Project Organization
+Dynamic Routes
+Parallel Routes
+Intercepting Routes
+Route Handlers
+Middleware
+Internationalization
+Data Fetching
+Data Fetching and Caching
+Server Actions and Mutations
+Incremental Static Regeneration (ISR)
+Rendering
+Server Components
+Client Components
+Composition Patterns
+Partial Prerendering
+Runtimes
+Caching
+Styling
+CSS
+Tailwind CSS
+Sass
+CSS-in-JS
+Optimizing
+Images
+Videos
+Fonts
+Metadata
+Scripts
+Package Bundling
+Lazy Loading
+Analytics
+Instrumentation
+OpenTelemetry
+Static Assets
+Third Party Libraries
+Memory Usage
+Configuring
+TypeScript
+ESLint
+Environment Variables
+Absolute Imports and Module Path Aliases
+MDX
+src Directory
+Custom Server
+Draft Mode
+Content Security Policy
+Debugging
+Progressive Web Applications (PWA)
+Testing
+Vitest
+Jest
+Playwright
+Cypress
+Authentication
+Deploying
+Production Checklist
+Static Exports
+Multi-Zones
+Upgrading
+Codemods
+Version 15
+Version 14
+App Router Migration
+Migrating from Create React App
+Migrating from Vite
+Examples
+API Reference
+Directives
+use cache
+use client
+use server
+Components
+Font
+<Form>
+<Image>
+<Link>
+<Script>
+File Conventions
+default.js
+error.js
+instrumentation.js
+layout.js
+loading.js
+mdx-components.js
+middleware.js
+not-found.js
+page.js
+route.js
+Route Segment Config
+template.js
+Metadata Files
+favicon, icon, and apple-icon
+manifest.json
+opengraph-image and twitter-image
+robots.txt
+sitemap.xml
+Functions
+cacheTag
+connection
+cookies
+draftMode
+fetch
+generateImageMetadata
+generateMetadata
+generateSitemaps
+generateStaticParams
+generateViewport
+headers
+ImageResponse
+NextRequest
+NextResponse
+notFound
+permanentRedirect
+redirect
+revalidatePath
+revalidateTag
+unstable_after
+unstable_rethrow
+useParams
+usePathname
+useReportWebVitals
+useRouter
+useSearchParams
+useSelectedLayoutSegment
+useSelectedLayoutSegments
+userAgent
+next.config.js Options
+appDir
+assetPrefix
+basePath
+cacheLife
+compress
+crossOrigin
+cssChunking
+devIndicators
+distDir
+dynamicIO
+env
+eslint
+expireTime
+exportPathMap
+generateBuildId
+generateEtags
+headers
+httpAgentOptions
+images
+cacheHandler
+logging
+mdxRs
+onDemandEntries
+optimizePackageImports
+output
+pageExtensions
+poweredByHeader
+ppr
+productionBrowserSourceMaps
+reactCompiler
+reactMaxHeadersLength
+reactStrictMode
+redirects
+rewrites
+sassOptions
+serverActions
+serverComponentsHmrCache
+serverExternalPackages
+staleTimes
+staticGeneration*
+trailingSlash
+transpilePackages
+turbo
+typedRoutes
+typescript
+urlImports
+useLightningcss
+webpack
+webVitalsAttribution
+CLI
+create-next-app
+next CLI
+Edge Runtime
+Legacy APIs
+unstable_cache
+unstable_noStore
+Architecture
+Accessibility
+Fast Refresh
+Next.js Compiler
+Supported Browsers
+Turbopack
+Community
+Contribution Guide
+On this page
+Top-level folders
+Top-level files
+app Routing Conventions
+Routing Files
+Nested Routes
+Dynamic Routes
+Route Groups and Private Folders
+Parallel and Intercepted Routes
+Metadata File Conventions
+App Icons
+Open Graph and Twitter Images
+SEO
+pages Routing Conventions
+Special Files
+Routes
+Dynamic Routes
+Managed Next.js (Vercel)
+Scroll to top
+Introduction
+Getting Started
+Project Structure
+Next.js Project Structure
+
+This page provides an overview of the project structure of a Next.js application. It covers top-level files and folders, configuration files, and routing conventions within the app and pages directories.
+
+Click the file and folder names to learn more about each convention.
+
+Top-level folders
+
+Top-level folders are used to organize your application's code and static assets.
+
+	
+app	App Router
+pages	Pages Router
+public	Static assets to be served
+src	Optional application source folder
+Top-level files
+
+Top-level files are used to configure your application, manage dependencies, run middleware, integrate monitoring tools, and define environment variables.
+
+	
+Next.js	
+next.config.js	Configuration file for Next.js
+package.json	Project dependencies and scripts
+instrumentation.ts	OpenTelemetry and Instrumentation file
+middleware.ts	Next.js request middleware
+.env	Environment variables
+.env.local	Local environment variables
+.env.production	Production environment variables
+.env.development	Development environment variables
+.eslintrc.json	Configuration file for ESLint
+.gitignore	Git files and folders to ignore
+next-env.d.ts	TypeScript declaration file for Next.js
+tsconfig.json	Configuration file for TypeScript
+jsconfig.json	Configuration file for JavaScript
+app Routing Conventions
+
+The following file conventions are used to define routes and handle metadata in the app router.
+
+Routing Files
+		
+layout	.js .jsx .tsx	Layout
+page	.js .jsx .tsx	Page
+loading	.js .jsx .tsx	Loading UI
+not-found	.js .jsx .tsx	Not found UI
+error	.js .jsx .tsx	Error UI
+global-error	.js .jsx .tsx	Global error UI
+route	.js .ts	API endpoint
+template	.js .jsx .tsx	Re-rendered layout
+default	.js .jsx .tsx	Parallel route fallback page
+Nested Routes
+	
+folder	Route segment
+folder/folder	Nested route segment
+Dynamic Routes
+	
+[folder]	Dynamic route segment
+[...folder]	Catch-all route segment
+[[...folder]]	Optional catch-all route segment
+Route Groups and Private Folders
+	
+(folder)	Group routes without affecting routing
+_folder	Opt folder and all child segments out of routing
+Parallel and Intercepted Routes
+	
+@folder	Named slot
+(.)folder	Intercept same level
+(..)folder	Intercept one level above
+(..)(..)folder	Intercept two levels above
+(...)folder	Intercept from root
+Metadata File Conventions
+App Icons
+		
+favicon	.ico	Favicon file
+icon	.ico .jpg .jpeg .png .svg	App Icon file
+icon	.js .ts .tsx	Generated App Icon
+apple-icon	.jpg .jpeg, .png	Apple App Icon file
+apple-icon	.js .ts .tsx	Generated Apple App Icon
+Open Graph and Twitter Images
+		
+opengraph-image	.jpg .jpeg .png .gif	Open Graph image file
+opengraph-image	.js .ts .tsx	Generated Open Graph image
+twitter-image	.jpg .jpeg .png .gif	Twitter image file
+twitter-image	.js .ts .tsx	Generated Twitter image
+SEO
+		
+sitemap	.xml	Sitemap file
+sitemap	.js .ts	Generated Sitemap
+robots	.txt	Robots file
+robots	.js .ts	Generated Robots file
+pages Routing Conventions
+
+The following file conventions are used to define routes in the pages router.
+
+Special Files
+		
+_app	.js .jsx .tsx	Custom App
+_document	.js .jsx .tsx	Custom Document
+_error	.js .jsx .tsx	Custom Error Page
+404	.js .jsx .tsx	404 Error Page
+500	.js .jsx .tsx	500 Error Page
+Routes
+		
+Folder convention		
+index	.js .jsx .tsx	Home page
+folder/index	.js .jsx .tsx	Nested page
+File convention		
+index	.js .jsx .tsx	Home page
+file	.js .jsx .tsx	Nested page
+Dynamic Routes
+		
+Folder convention		
+[folder]/index	.js .jsx .tsx	Dynamic route segment
+[...folder]/index	.js .jsx .tsx	Catch-all route segment
+[[...folder]]/index	.js .jsx .tsx	Optional catch-all route segment
+File convention		
+[file]	.js .jsx .tsx	Dynamic route segment
+[...file]	.js .jsx .tsx	Catch-all route segment
+[[...file]]	.js .jsx .tsx	Optional catch-all route segment
+Previous
+Installation
+Next
+App Router
+
+Was this helpful?
+
+supported.
+Send
+Resources
+Docs
+Learn
+Showcase
+Blog
+Analytics
+Next.js Conf
+Previews
+More
+Next.js Commerce
+Contact Sales
+GitHub
+Releases
+Telemetry
+Governance
+About Vercel
+Next.js + Vercel
+Open Source Software
+GitHub
+X
+Legal
+Privacy Policy
+Cookie Preferences
+Subscribe to our newsletter
+
+Stay updated on new releases and features, guides, and case studies.
+
+Subscribe
+
+© 2024 Vercel, Inc.

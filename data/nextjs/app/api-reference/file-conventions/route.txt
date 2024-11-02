@@ -1,0 +1,364 @@
+Skip to content
+Showcase
+Docs
+Blog
+Templates
+Enterprise
+Search documentation...
+Feedback
+Learn
+
+Using App Router
+
+Features available in /app
+
+Using Stable Version
+
+v15.0.2
+
+Getting Started
+Installation
+Project Structure
+Building Your Application
+Routing
+Defining Routes
+Pages
+Layouts and Templates
+Linking and Navigating
+Error Handling
+Loading UI and Streaming
+Redirecting
+Route Groups
+Project Organization
+Dynamic Routes
+Parallel Routes
+Intercepting Routes
+Route Handlers
+Middleware
+Internationalization
+Data Fetching
+Data Fetching and Caching
+Server Actions and Mutations
+Incremental Static Regeneration (ISR)
+Rendering
+Server Components
+Client Components
+Composition Patterns
+Partial Prerendering
+Runtimes
+Caching
+Styling
+CSS
+Tailwind CSS
+Sass
+CSS-in-JS
+Optimizing
+Images
+Videos
+Fonts
+Metadata
+Scripts
+Package Bundling
+Lazy Loading
+Analytics
+Instrumentation
+OpenTelemetry
+Static Assets
+Third Party Libraries
+Memory Usage
+Configuring
+TypeScript
+ESLint
+Environment Variables
+Absolute Imports and Module Path Aliases
+MDX
+src Directory
+Custom Server
+Draft Mode
+Content Security Policy
+Debugging
+Progressive Web Applications (PWA)
+Testing
+Vitest
+Jest
+Playwright
+Cypress
+Authentication
+Deploying
+Production Checklist
+Static Exports
+Multi-Zones
+Upgrading
+Codemods
+Version 15
+Version 14
+App Router Migration
+Migrating from Create React App
+Migrating from Vite
+Examples
+API Reference
+Directives
+use cache
+use client
+use server
+Components
+Font
+<Form>
+<Image>
+<Link>
+<Script>
+File Conventions
+default.js
+error.js
+instrumentation.js
+layout.js
+loading.js
+mdx-components.js
+middleware.js
+not-found.js
+page.js
+route.js
+Route Segment Config
+template.js
+Metadata Files
+favicon, icon, and apple-icon
+manifest.json
+opengraph-image and twitter-image
+robots.txt
+sitemap.xml
+Functions
+cacheTag
+connection
+cookies
+draftMode
+fetch
+generateImageMetadata
+generateMetadata
+generateSitemaps
+generateStaticParams
+generateViewport
+headers
+ImageResponse
+NextRequest
+NextResponse
+notFound
+permanentRedirect
+redirect
+revalidatePath
+revalidateTag
+unstable_after
+unstable_rethrow
+useParams
+usePathname
+useReportWebVitals
+useRouter
+useSearchParams
+useSelectedLayoutSegment
+useSelectedLayoutSegments
+userAgent
+next.config.js Options
+appDir
+assetPrefix
+basePath
+cacheLife
+compress
+crossOrigin
+cssChunking
+devIndicators
+distDir
+dynamicIO
+env
+eslint
+expireTime
+exportPathMap
+generateBuildId
+generateEtags
+headers
+httpAgentOptions
+images
+cacheHandler
+logging
+mdxRs
+onDemandEntries
+optimizePackageImports
+output
+pageExtensions
+poweredByHeader
+ppr
+productionBrowserSourceMaps
+reactCompiler
+reactMaxHeadersLength
+reactStrictMode
+redirects
+rewrites
+sassOptions
+serverActions
+serverComponentsHmrCache
+serverExternalPackages
+staleTimes
+staticGeneration*
+trailingSlash
+transpilePackages
+turbo
+typedRoutes
+typescript
+urlImports
+useLightningcss
+webpack
+webVitalsAttribution
+CLI
+create-next-app
+next CLI
+Edge Runtime
+Legacy APIs
+unstable_cache
+unstable_noStore
+Architecture
+Accessibility
+Fast Refresh
+Next.js Compiler
+Supported Browsers
+Turbopack
+Community
+Contribution Guide
+On this page
+Reference
+HTTP Methods
+Parameters
+request (optional)
+context (optional)
+Examples
+Handling cookies
+Version History
+Managed Next.js (Vercel)
+Scroll to top
+API Reference
+File Conventions
+route.js
+route.js
+
+Route Handlers allow you to create custom request handlers for a given route using the Web Request
+ and Response
+ APIs.
+
+route.ts
+TypeScript
+JavaScript
+TypeScript
+export async function GET() {
+  return Response.json({ message: 'Hello World' })
+}
+Reference
+HTTP Methods
+
+A route file allows you to create custom request handlers for a given route. The following HTTP methods
+ are supported: GET, POST, PUT, PATCH, DELETE, HEAD, and OPTIONS.
+
+route.ts
+TypeScript
+JavaScript
+TypeScript
+export async function GET(request: Request) {}
+ 
+export async function HEAD(request: Request) {}
+ 
+export async function POST(request: Request) {}
+ 
+export async function PUT(request: Request) {}
+ 
+export async function DELETE(request: Request) {}
+ 
+export async function PATCH(request: Request) {}
+ 
+// If `OPTIONS` is not defined, Next.js will automatically implement `OPTIONS` and set the appropriate Response `Allow` header depending on the other methods defined in the Route Handler.
+export async function OPTIONS(request: Request) {}
+Parameters
+request (optional)
+
+The request object is a NextRequest object, which is an extension of the Web Request
+ API. NextRequest gives you further control over the incoming request, including easily accessing cookies and an extended, parsed, URL object nextUrl.
+
+route.ts
+TypeScript
+JavaScript
+TypeScript
+import type { NextRequest } from 'next/server'
+ 
+export async function GET(request: NextRequest) {
+  const url = request.nextUrl
+}
+context (optional)
+params: a promise that resolves to an object containing the dynamic route parameters for the current route.
+app/dashboard/[team]/route.ts
+TypeScript
+JavaScript
+TypeScript
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ team: string }> }
+) {
+  const team = (await params).team
+}
+Example	URL	params
+app/dashboard/[team]/route.js	/dashboard/1	Promise<{ team: '1' }>
+app/shop/[tag]/[item]/route.js	/shop/1/2	Promise<{ tag: '1', item: '2' }>
+app/blog/[...slug]/route.js	/blog/1/2	Promise<{ slug: ['1', '2'] }>
+Examples
+Handling cookies
+route.ts
+TypeScript
+JavaScript
+TypeScript
+import { cookies } from 'next/headers'
+ 
+export async function GET(request: NextRequest) {
+  const cookieStore = await cookies()
+ 
+  const a = cookieStore.get('a')
+  const b = cookieStore.set('b', '1')
+  const c = cookieStore.delete('c')
+}
+Version History
+Version	Changes
+v15.0.0-RC	context.params is now a promise. A codemod is available
+v15.0.0-RC	The default caching for GET handlers was changed from static to dynamic
+v13.2.0	Route Handlers are introduced.
+Previous
+page.js
+Next
+Route Segment Config
+
+Was this helpful?
+
+supported.
+Send
+Resources
+Docs
+Learn
+Showcase
+Blog
+Analytics
+Next.js Conf
+Previews
+More
+Next.js Commerce
+Contact Sales
+GitHub
+Releases
+Telemetry
+Governance
+About Vercel
+Next.js + Vercel
+Open Source Software
+GitHub
+X
+Legal
+Privacy Policy
+Cookie Preferences
+Subscribe to our newsletter
+
+Stay updated on new releases and features, guides, and case studies.
+
+Subscribe
+
+© 2024 Vercel, Inc.

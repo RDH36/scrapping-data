@@ -1,0 +1,353 @@
+Skip to content
+Showcase
+Docs
+Blog
+Templates
+Enterprise
+Search documentation...
+Feedback
+Learn
+
+Using App Router
+
+Features available in /app
+
+Using Stable Version
+
+v15.0.2
+
+Getting Started
+Installation
+Project Structure
+Building Your Application
+Routing
+Defining Routes
+Pages
+Layouts and Templates
+Linking and Navigating
+Error Handling
+Loading UI and Streaming
+Redirecting
+Route Groups
+Project Organization
+Dynamic Routes
+Parallel Routes
+Intercepting Routes
+Route Handlers
+Middleware
+Internationalization
+Data Fetching
+Data Fetching and Caching
+Server Actions and Mutations
+Incremental Static Regeneration (ISR)
+Rendering
+Server Components
+Client Components
+Composition Patterns
+Partial Prerendering
+Runtimes
+Caching
+Styling
+CSS
+Tailwind CSS
+Sass
+CSS-in-JS
+Optimizing
+Images
+Videos
+Fonts
+Metadata
+Scripts
+Package Bundling
+Lazy Loading
+Analytics
+Instrumentation
+OpenTelemetry
+Static Assets
+Third Party Libraries
+Memory Usage
+Configuring
+TypeScript
+ESLint
+Environment Variables
+Absolute Imports and Module Path Aliases
+MDX
+src Directory
+Custom Server
+Draft Mode
+Content Security Policy
+Debugging
+Progressive Web Applications (PWA)
+Testing
+Vitest
+Jest
+Playwright
+Cypress
+Authentication
+Deploying
+Production Checklist
+Static Exports
+Multi-Zones
+Upgrading
+Codemods
+Version 15
+Version 14
+App Router Migration
+Migrating from Create React App
+Migrating from Vite
+Examples
+API Reference
+Directives
+use cache
+use client
+use server
+Components
+Font
+<Form>
+<Image>
+<Link>
+<Script>
+File Conventions
+default.js
+error.js
+instrumentation.js
+layout.js
+loading.js
+mdx-components.js
+middleware.js
+not-found.js
+page.js
+route.js
+Route Segment Config
+template.js
+Metadata Files
+favicon, icon, and apple-icon
+manifest.json
+opengraph-image and twitter-image
+robots.txt
+sitemap.xml
+Functions
+cacheTag
+connection
+cookies
+draftMode
+fetch
+generateImageMetadata
+generateMetadata
+generateSitemaps
+generateStaticParams
+generateViewport
+headers
+ImageResponse
+NextRequest
+NextResponse
+notFound
+permanentRedirect
+redirect
+revalidatePath
+revalidateTag
+unstable_after
+unstable_rethrow
+useParams
+usePathname
+useReportWebVitals
+useRouter
+useSearchParams
+useSelectedLayoutSegment
+useSelectedLayoutSegments
+userAgent
+next.config.js Options
+appDir
+assetPrefix
+basePath
+cacheLife
+compress
+crossOrigin
+cssChunking
+devIndicators
+distDir
+dynamicIO
+env
+eslint
+expireTime
+exportPathMap
+generateBuildId
+generateEtags
+headers
+httpAgentOptions
+images
+cacheHandler
+logging
+mdxRs
+onDemandEntries
+optimizePackageImports
+output
+pageExtensions
+poweredByHeader
+ppr
+productionBrowserSourceMaps
+reactCompiler
+reactMaxHeadersLength
+reactStrictMode
+redirects
+rewrites
+sassOptions
+serverActions
+serverComponentsHmrCache
+serverExternalPackages
+staleTimes
+staticGeneration*
+trailingSlash
+transpilePackages
+turbo
+typedRoutes
+typescript
+urlImports
+useLightningcss
+webpack
+webVitalsAttribution
+CLI
+create-next-app
+next CLI
+Edge Runtime
+Legacy APIs
+unstable_cache
+unstable_noStore
+Architecture
+Accessibility
+Fast Refresh
+Next.js Compiler
+Supported Browsers
+Turbopack
+Community
+Contribution Guide
+On this page
+Usage
+Supported features
+Unsupported features
+Generating Trace Files
+Managed Next.js (Vercel)
+Scroll to top
+Introduction
+Architecture
+Turbopack
+Turbopack
+
+Turbopack
+ is an incremental bundler optimized for JavaScript and TypeScript, written in Rust, and built into Next.js.
+
+Usage
+
+Turbopack can be used in Next.js in both the pages and app directories for faster local development. To enable Turbopack, use the --turbopack flag when running the Next.js development server.
+
+package.json
+{
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  }
+}
+Supported features
+
+Turbopack in Next.js requires zero-configuration for most users and can be extended for more advanced use cases. To learn more about the currently supported features for Turbopack, view the API Reference.
+
+Unsupported features
+
+Turbopack currently only supports next dev and does not support next build. We are currently working on support for builds as we move closer towards stability.
+
+These features are currently not supported:
+
+Turbopack leverages Lightning CSS
+ which doesn't support some low usage CSS Modules features
+:local and :global as standalone pseudo classes. Only the function variant is supported, for example: :global(a).
+The @value rule which has been superseded by CSS variables.
+:import and :export ICSS rules.
+Invalid CSS comment syntax
+ such as //
+CSS comments should be written as /* comment */ per the specification.
+Preprocessors such as Sass do support this alternative syntax for comments.
+webpack() configuration in next.config.js
+Turbopack replaces Webpack, this means that webpack configuration is not supported.
+To configure Turbopack, see the documentation.
+A subset of Webpack loaders are supported in Turbopack.
+Babel (.babelrc)
+Turbopack leverages the SWC compiler for all transpilation and optimizations. This means that Babel is not included by default.
+If you have a .babelrc file, you might no longer need it because Next.js includes common Babel plugins as SWC transforms that can be enabled. You can read more about this in the compiler documentation.
+If you still need to use Babel after verifying your particular use case is not covered, you can leverage Turbopack's support for custom webpack loaders to include babel-loader.
+Creating a root layout automatically in App Router.
+This behavior is currently not supported since it changes input files, instead, an error will be shown for you to manually add a root layout in the desired location.
+@next/font (legacy font support).
+@next/font is deprecated in favor of next/font. next/font is fully supported with Turbopack.
+Relay transforms
+We are planning to implement this in the future.
+Blocking .css imports in pages/_document.tsx
+Currently with webpack Next.js blocks importing .css files in pages/_document.tsx
+We are planning to implement this warning in the future.
+experimental.typedRoutes
+We are planning to implement this in the future.
+experimental.nextScriptWorkers
+We are planning to implement this in the future.
+experimental.sri.algorithm
+We are planning to implement this in the future.
+experimental.fallbackNodePolyfills
+We are planning to implement this in the future.
+experimental.esmExternals
+We are currently not planning to support the legacy esmExternals configuration in Next.js with Turbopack.
+AMP.
+We are currently not planning to support AMP in Next.js with Turbopack.
+Yarn PnP
+We are currently not planning to support Yarn PnP in Next.js with Turbopack.
+experimental.urlImports
+We are currently not planning to support experimental.urlImports in Next.js with Turbopack.
+:import and :export ICSS rules
+We are currently not planning to support :import and :export ICSS rules in Next.js with Turbopack as Lightning CSS
+ the CSS parser Turbopack uses does not support these rules.
+unstable_allowDynamic configuration in edge runtime
+Generating Trace Files
+
+Trace files allow the Next.js team to investigate and improve performance metrics and memory usage. To generate a trace file, append NEXT_TURBOPACK_TRACING=1 to the next dev --turbopack command, this will generate a .next/trace.log file.
+
+When reporting issues related to Turbopack performance and memory usage, please include the trace file in your GitHub
+ issue.
+
+Previous
+Supported Browsers
+Next
+Community
+
+Was this helpful?
+
+supported.
+Send
+Resources
+Docs
+Learn
+Showcase
+Blog
+Analytics
+Next.js Conf
+Previews
+More
+Next.js Commerce
+Contact Sales
+GitHub
+Releases
+Telemetry
+Governance
+About Vercel
+Next.js + Vercel
+Open Source Software
+GitHub
+X
+Legal
+Privacy Policy
+Cookie Preferences
+Subscribe to our newsletter
+
+Stay updated on new releases and features, guides, and case studies.
+
+Subscribe
+
+© 2024 Vercel, Inc.

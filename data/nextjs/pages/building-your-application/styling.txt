@@ -1,0 +1,430 @@
+Skip to content
+Showcase
+Docs
+Blog
+Templates
+Enterprise
+Search documentation...
+Feedback
+Learn
+
+Using App Router
+
+Features available in /app
+
+Using Stable Version
+
+v15.0.2
+
+Getting Started
+Installation
+Project Structure
+Building Your Application
+Routing
+Defining Routes
+Pages
+Layouts and Templates
+Linking and Navigating
+Error Handling
+Loading UI and Streaming
+Redirecting
+Route Groups
+Project Organization
+Dynamic Routes
+Parallel Routes
+Intercepting Routes
+Route Handlers
+Middleware
+Internationalization
+Data Fetching
+Data Fetching and Caching
+Server Actions and Mutations
+Incremental Static Regeneration (ISR)
+Rendering
+Server Components
+Client Components
+Composition Patterns
+Partial Prerendering
+Runtimes
+Caching
+Styling
+CSS
+Tailwind CSS
+Sass
+CSS-in-JS
+Optimizing
+Images
+Videos
+Fonts
+Metadata
+Scripts
+Package Bundling
+Lazy Loading
+Analytics
+Instrumentation
+OpenTelemetry
+Static Assets
+Third Party Libraries
+Memory Usage
+Configuring
+TypeScript
+ESLint
+Environment Variables
+Absolute Imports and Module Path Aliases
+MDX
+src Directory
+Custom Server
+Draft Mode
+Content Security Policy
+Debugging
+Progressive Web Applications (PWA)
+Testing
+Vitest
+Jest
+Playwright
+Cypress
+Authentication
+Deploying
+Production Checklist
+Static Exports
+Multi-Zones
+Upgrading
+Codemods
+Version 15
+Version 14
+App Router Migration
+Migrating from Create React App
+Migrating from Vite
+Examples
+API Reference
+Directives
+use cache
+use client
+use server
+Components
+Font
+<Form>
+<Image>
+<Link>
+<Script>
+File Conventions
+default.js
+error.js
+instrumentation.js
+layout.js
+loading.js
+mdx-components.js
+middleware.js
+not-found.js
+page.js
+route.js
+Route Segment Config
+template.js
+Metadata Files
+favicon, icon, and apple-icon
+manifest.json
+opengraph-image and twitter-image
+robots.txt
+sitemap.xml
+Functions
+cacheTag
+connection
+cookies
+draftMode
+fetch
+generateImageMetadata
+generateMetadata
+generateSitemaps
+generateStaticParams
+generateViewport
+headers
+ImageResponse
+NextRequest
+NextResponse
+notFound
+permanentRedirect
+redirect
+revalidatePath
+revalidateTag
+unstable_after
+unstable_rethrow
+useParams
+usePathname
+useReportWebVitals
+useRouter
+useSearchParams
+useSelectedLayoutSegment
+useSelectedLayoutSegments
+userAgent
+next.config.js Options
+appDir
+assetPrefix
+basePath
+cacheLife
+compress
+crossOrigin
+cssChunking
+devIndicators
+distDir
+dynamicIO
+env
+eslint
+expireTime
+exportPathMap
+generateBuildId
+generateEtags
+headers
+httpAgentOptions
+images
+cacheHandler
+logging
+mdxRs
+onDemandEntries
+optimizePackageImports
+output
+pageExtensions
+poweredByHeader
+ppr
+productionBrowserSourceMaps
+reactCompiler
+reactMaxHeadersLength
+reactStrictMode
+redirects
+rewrites
+sassOptions
+serverActions
+serverComponentsHmrCache
+serverExternalPackages
+staleTimes
+staticGeneration*
+trailingSlash
+transpilePackages
+turbo
+typedRoutes
+typescript
+urlImports
+useLightningcss
+webpack
+webVitalsAttribution
+CLI
+create-next-app
+next CLI
+Edge Runtime
+Legacy APIs
+unstable_cache
+unstable_noStore
+Architecture
+Accessibility
+Fast Refresh
+Next.js Compiler
+Supported Browsers
+Turbopack
+Community
+Contribution Guide
+On this page
+CSS Modules
+Example
+Global Styles
+External Stylesheets
+Import styles from node_modules
+Additional Features
+Managed Next.js (Vercel)
+Scroll to top
+Pages Router
+Building Your Application
+Styling
+Styling
+Examples
+Basic CSS Example
+
+Next.js supports multiple ways of handling CSS, including:
+
+CSS Modules
+Global Styles
+External Stylesheets
+CSS Modules
+
+Next.js has built-in support for CSS Modules using the .module.css extension.
+
+CSS Modules locally scope CSS by automatically creating a unique class name. This allows you to use the same class name in different files without worrying about collisions. This behavior makes CSS Modules the ideal way to include component-level CSS.
+
+Example
+
+For example, consider a reusable Button component in the components/ folder:
+
+First, create components/Button.module.css with the following content:
+
+Button.module.css
+/*
+You do not need to worry about .error {} colliding with any other `.css` or
+`.module.css` files!
+*/
+.error {
+  color: white;
+  background-color: red;
+}
+
+Then, create components/Button.js, importing and using the above CSS file:
+
+components/Button.js
+import styles from './Button.module.css'
+ 
+export function Button() {
+  return (
+    <button
+      type="button"
+      // Note how the "error" class is accessed as a property on the imported
+      // `styles` object.
+      className={styles.error}
+    >
+      Destroy
+    </button>
+  )
+}
+
+CSS Modules are only enabled for files with the .module.css and .module.sass extensions.
+
+In production, all CSS Module files will be automatically concatenated into many minified and code-split .css files. These .css files represent hot execution paths in your application, ensuring the minimal amount of CSS is loaded for your application to paint.
+
+Global Styles
+
+To add a stylesheet to your application, import the CSS file within pages/_app.js.
+
+For example, consider the following stylesheet named styles.css:
+
+styles.css
+body {
+  font-family: 'SF Pro Text', 'SF Pro Icons', 'Helvetica Neue', 'Helvetica',
+    'Arial', sans-serif;
+  padding: 20px 20px 60px;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+Create a pages/_app.js file if not already present. Then, import
+ the styles.css file.
+
+pages/_app.js
+import '../styles.css'
+ 
+// This default export is required in a new `pages/_app.js` file.
+export default function MyApp({ Component, pageProps }) {
+  return <Component {...pageProps} />
+}
+
+These styles (styles.css) will apply to all pages and components in your application. Due to the global nature of stylesheets, and to avoid conflicts, you may only import them inside pages/_app.js.
+
+In development, expressing stylesheets this way allows your styles to be hot reloaded as you edit them—meaning you can keep application state.
+
+In production, all CSS files will be automatically concatenated into a single minified .css file. The order that the CSS is concatenated will match the order the CSS is imported into the _app.js file. Pay special attention to imported JS modules that include their own CSS; the JS module's CSS will be concatenated following the same ordering rules as imported CSS files. For example:
+
+import '../styles.css'
+// The CSS in ErrorBoundary depends on the global CSS in styles.css,
+// so we import it after styles.css.
+import ErrorBoundary from '../components/ErrorBoundary'
+ 
+export default function MyApp({ Component, pageProps }) {
+  return (
+    <ErrorBoundary>
+      <Component {...pageProps} />
+    </ErrorBoundary>
+  )
+}
+External Stylesheets
+
+Next.js allows you to import CSS files from a JavaScript file. This is possible because Next.js extends the concept of import
+ beyond JavaScript.
+
+Import styles from node_modules
+
+Since Next.js 9.5.4, importing a CSS file from node_modules is permitted anywhere in your application.
+
+For global stylesheets, like bootstrap or nprogress, you should import the file inside pages/_app.js. For example:
+
+pages/_app.js
+import 'bootstrap/dist/css/bootstrap.css'
+ 
+export default function MyApp({ Component, pageProps }) {
+  return <Component {...pageProps} />
+}
+
+For importing CSS required by a third-party component, you can do so in your component. For example:
+
+components/example-dialog.js
+import { useState } from 'react'
+import { Dialog } from '@reach/dialog'
+import VisuallyHidden from '@reach/visually-hidden'
+import '@reach/dialog/styles.css'
+ 
+function ExampleDialog(props) {
+  const [showDialog, setShowDialog] = useState(false)
+  const open = () => setShowDialog(true)
+  const close = () => setShowDialog(false)
+ 
+  return (
+    <div>
+      <button onClick={open}>Open Dialog</button>
+      <Dialog isOpen={showDialog} onDismiss={close}>
+        <button className="close-button" onClick={close}>
+          <VisuallyHidden>Close</VisuallyHidden>
+          <span aria-hidden>×</span>
+        </button>
+        <p>Hello there. I am a dialog</p>
+      </Dialog>
+    </div>
+  )
+}
+Additional Features
+
+Next.js includes additional features to improve the authoring experience of adding styles:
+
+When running locally with next dev, local stylesheets (either global or CSS modules) will take advantage of Fast Refresh to instantly reflect changes as edits are saved.
+When building for production with next build, CSS files will be bundled into fewer minified .css files to reduce the number of network requests needed to retrieve styles.
+If you disable JavaScript, styles will still be loaded in the production build (next start). However, JavaScript is still required for next dev to enable Fast Refresh.
+CSS Modules
+Style your Next.js Application using CSS Modules.
+Tailwind CSS
+Style your Next.js Application using Tailwind CSS.
+CSS-in-JS
+Use CSS-in-JS libraries with Next.js
+Sass
+Learn how to use Sass in your Next.js application.
+Previous
+Client-side Fetching
+Next
+CSS Modules
+
+Was this helpful?
+
+supported.
+Send
+Resources
+Docs
+Learn
+Showcase
+Blog
+Analytics
+Next.js Conf
+Previews
+More
+Next.js Commerce
+Contact Sales
+GitHub
+Releases
+Telemetry
+Governance
+About Vercel
+Next.js + Vercel
+Open Source Software
+GitHub
+X
+Legal
+Privacy Policy
+Cookie Preferences
+Subscribe to our newsletter
+
+Stay updated on new releases and features, guides, and case studies.
+
+Subscribe
+
+© 2024 Vercel, Inc.

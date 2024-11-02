@@ -1,0 +1,323 @@
+Skip to content
+Showcase
+Docs
+Blog
+Templates
+Enterprise
+Search documentation...
+Feedback
+Learn
+
+Using App Router
+
+Features available in /app
+
+Using Stable Version
+
+v15.0.2
+
+Getting Started
+Installation
+Project Structure
+Building Your Application
+Routing
+Defining Routes
+Pages
+Layouts and Templates
+Linking and Navigating
+Error Handling
+Loading UI and Streaming
+Redirecting
+Route Groups
+Project Organization
+Dynamic Routes
+Parallel Routes
+Intercepting Routes
+Route Handlers
+Middleware
+Internationalization
+Data Fetching
+Data Fetching and Caching
+Server Actions and Mutations
+Incremental Static Regeneration (ISR)
+Rendering
+Server Components
+Client Components
+Composition Patterns
+Partial Prerendering
+Runtimes
+Caching
+Styling
+CSS
+Tailwind CSS
+Sass
+CSS-in-JS
+Optimizing
+Images
+Videos
+Fonts
+Metadata
+Scripts
+Package Bundling
+Lazy Loading
+Analytics
+Instrumentation
+OpenTelemetry
+Static Assets
+Third Party Libraries
+Memory Usage
+Configuring
+TypeScript
+ESLint
+Environment Variables
+Absolute Imports and Module Path Aliases
+MDX
+src Directory
+Custom Server
+Draft Mode
+Content Security Policy
+Debugging
+Progressive Web Applications (PWA)
+Testing
+Vitest
+Jest
+Playwright
+Cypress
+Authentication
+Deploying
+Production Checklist
+Static Exports
+Multi-Zones
+Upgrading
+Codemods
+Version 15
+Version 14
+App Router Migration
+Migrating from Create React App
+Migrating from Vite
+Examples
+API Reference
+Directives
+use cache
+use client
+use server
+Components
+Font
+<Form>
+<Image>
+<Link>
+<Script>
+File Conventions
+default.js
+error.js
+instrumentation.js
+layout.js
+loading.js
+mdx-components.js
+middleware.js
+not-found.js
+page.js
+route.js
+Route Segment Config
+template.js
+Metadata Files
+favicon, icon, and apple-icon
+manifest.json
+opengraph-image and twitter-image
+robots.txt
+sitemap.xml
+Functions
+cacheTag
+connection
+cookies
+draftMode
+fetch
+generateImageMetadata
+generateMetadata
+generateSitemaps
+generateStaticParams
+generateViewport
+headers
+ImageResponse
+NextRequest
+NextResponse
+notFound
+permanentRedirect
+redirect
+revalidatePath
+revalidateTag
+unstable_after
+unstable_rethrow
+useParams
+usePathname
+useReportWebVitals
+useRouter
+useSearchParams
+useSelectedLayoutSegment
+useSelectedLayoutSegments
+userAgent
+next.config.js Options
+appDir
+assetPrefix
+basePath
+cacheLife
+compress
+crossOrigin
+cssChunking
+devIndicators
+distDir
+dynamicIO
+env
+eslint
+expireTime
+exportPathMap
+generateBuildId
+generateEtags
+headers
+httpAgentOptions
+images
+cacheHandler
+logging
+mdxRs
+onDemandEntries
+optimizePackageImports
+output
+pageExtensions
+poweredByHeader
+ppr
+productionBrowserSourceMaps
+reactCompiler
+reactMaxHeadersLength
+reactStrictMode
+redirects
+rewrites
+sassOptions
+serverActions
+serverComponentsHmrCache
+serverExternalPackages
+staleTimes
+staticGeneration*
+trailingSlash
+transpilePackages
+turbo
+typedRoutes
+typescript
+urlImports
+useLightningcss
+webpack
+webVitalsAttribution
+CLI
+create-next-app
+next CLI
+Edge Runtime
+Legacy APIs
+unstable_cache
+unstable_noStore
+Architecture
+Accessibility
+Fast Refresh
+Next.js Compiler
+Supported Browsers
+Turbopack
+Community
+Contribution Guide
+On this page
+Reference
+action (string) Props
+Caveats
+Managed Next.js (Vercel)
+Scroll to top
+API Reference
+Components
+<Form>
+<Form>
+
+The <Form> component extends the HTML <form> element to provide client-side navigation on submission, and progressive enhancement.
+
+It's useful for forms that update URL search params as it reduces the boilerplate code needed to achieve the above.
+
+Basic usage:
+
+/ui/search.js
+TypeScript
+JavaScript
+TypeScript
+import Form from 'next/form'
+ 
+export default function Page() {
+  return (
+    <Form action="/search">
+      {/* On submission, the input value will be appended to 
+          the URL, e.g. /search?query=abc */}
+      <input name="query" />
+      <button type="submit">Submit</button>
+    </Form>
+  )
+}
+Reference
+
+The behavior of the <Form> component depends on whether the action prop is passed a string or function.
+
+When action is a string, the <Form> behaves like a native HTML form that uses a GET method. The form data is encoded into the URL as search params, and when the form is submitted, it navigates to the specified URL. In addition, Next.js:
+Performs a client-side navigation instead of a full page reload when the form is submitted. This retains shared UI and client-side state.
+action (string) Props
+
+When action is a string, the <Form> component supports the following props:
+
+Prop	Example	Type	Required
+action	action="/search"	string (URL or relative path)	Yes
+replace	replace={false}	boolean	-
+scroll	scroll={true}	boolean	-
+action: The URL or path to navigate to when the form is submitted.
+An empty string "" will navigate to the same route with updated search params.
+replace: Replaces the current history state instead of pushing a new one to the browser's history
+ stack. Default is false.
+scroll: Controls the scroll behavior during navigation. Defaults to true, this means it will scroll to the top of the new route, and maintain the scroll position for backwards and forwards navigation.
+Caveats
+onSubmit: Can be used to handle form submission logic. However, calling event.preventDefault() will override <Form> behavior such as navigating to the specified URL.
+method
+, encType
+, target
+: Are not supported as they override <Form> behavior.
+Similarly, formMethod, formEncType, and formTarget can be used to override the method, encType, and target props respectively, and using them will fallback to native browser behavior.
+If you need to use these props, use the HTML <form> element instead.
+<input type="file">: Using this input type when the action is a string will match browser behavior by submitting the filename instead of the file object.
+Previous
+Font
+Next
+<Head>
+
+Was this helpful?
+
+supported.
+Send
+Resources
+Docs
+Learn
+Showcase
+Blog
+Analytics
+Next.js Conf
+Previews
+More
+Next.js Commerce
+Contact Sales
+GitHub
+Releases
+Telemetry
+Governance
+About Vercel
+Next.js + Vercel
+Open Source Software
+GitHub
+X
+Legal
+Privacy Policy
+Cookie Preferences
+Subscribe to our newsletter
+
+Stay updated on new releases and features, guides, and case studies.
+
+Subscribe
+
+© 2024 Vercel, Inc.

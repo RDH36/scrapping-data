@@ -1,0 +1,392 @@
+Skip to content
+Showcase
+Docs
+Blog
+Templates
+Enterprise
+Search documentation...
+Feedback
+Learn
+
+Using App Router
+
+Features available in /app
+
+Using Stable Version
+
+v15.0.2
+
+Getting Started
+Installation
+Project Structure
+Building Your Application
+Routing
+Defining Routes
+Pages
+Layouts and Templates
+Linking and Navigating
+Error Handling
+Loading UI and Streaming
+Redirecting
+Route Groups
+Project Organization
+Dynamic Routes
+Parallel Routes
+Intercepting Routes
+Route Handlers
+Middleware
+Internationalization
+Data Fetching
+Data Fetching and Caching
+Server Actions and Mutations
+Incremental Static Regeneration (ISR)
+Rendering
+Server Components
+Client Components
+Composition Patterns
+Partial Prerendering
+Runtimes
+Caching
+Styling
+CSS
+Tailwind CSS
+Sass
+CSS-in-JS
+Optimizing
+Images
+Videos
+Fonts
+Metadata
+Scripts
+Package Bundling
+Lazy Loading
+Analytics
+Instrumentation
+OpenTelemetry
+Static Assets
+Third Party Libraries
+Memory Usage
+Configuring
+TypeScript
+ESLint
+Environment Variables
+Absolute Imports and Module Path Aliases
+MDX
+src Directory
+Custom Server
+Draft Mode
+Content Security Policy
+Debugging
+Progressive Web Applications (PWA)
+Testing
+Vitest
+Jest
+Playwright
+Cypress
+Authentication
+Deploying
+Production Checklist
+Static Exports
+Multi-Zones
+Upgrading
+Codemods
+Version 15
+Version 14
+App Router Migration
+Migrating from Create React App
+Migrating from Vite
+Examples
+API Reference
+Directives
+use cache
+use client
+use server
+Components
+Font
+<Form>
+<Image>
+<Link>
+<Script>
+File Conventions
+default.js
+error.js
+instrumentation.js
+layout.js
+loading.js
+mdx-components.js
+middleware.js
+not-found.js
+page.js
+route.js
+Route Segment Config
+template.js
+Metadata Files
+favicon, icon, and apple-icon
+manifest.json
+opengraph-image and twitter-image
+robots.txt
+sitemap.xml
+Functions
+cacheTag
+connection
+cookies
+draftMode
+fetch
+generateImageMetadata
+generateMetadata
+generateSitemaps
+generateStaticParams
+generateViewport
+headers
+ImageResponse
+NextRequest
+NextResponse
+notFound
+permanentRedirect
+redirect
+revalidatePath
+revalidateTag
+unstable_after
+unstable_rethrow
+useParams
+usePathname
+useReportWebVitals
+useRouter
+useSearchParams
+useSelectedLayoutSegment
+useSelectedLayoutSegments
+userAgent
+next.config.js Options
+appDir
+assetPrefix
+basePath
+cacheLife
+compress
+crossOrigin
+cssChunking
+devIndicators
+distDir
+dynamicIO
+env
+eslint
+expireTime
+exportPathMap
+generateBuildId
+generateEtags
+headers
+httpAgentOptions
+images
+cacheHandler
+logging
+mdxRs
+onDemandEntries
+optimizePackageImports
+output
+pageExtensions
+poweredByHeader
+ppr
+productionBrowserSourceMaps
+reactCompiler
+reactMaxHeadersLength
+reactStrictMode
+redirects
+rewrites
+sassOptions
+serverActions
+serverComponentsHmrCache
+serverExternalPackages
+staleTimes
+staticGeneration*
+trailingSlash
+transpilePackages
+turbo
+typedRoutes
+typescript
+urlImports
+useLightningcss
+webpack
+webVitalsAttribution
+CLI
+create-next-app
+next CLI
+Edge Runtime
+Legacy APIs
+unstable_cache
+unstable_noStore
+Architecture
+Accessibility
+Fast Refresh
+Next.js Compiler
+Supported Browsers
+Turbopack
+Community
+Contribution Guide
+On this page
+cookies
+set(name, value)
+get(name)
+getAll()
+delete(name)
+json()
+redirect()
+rewrite()
+next()
+Managed Next.js (Vercel)
+Scroll to top
+API Reference
+Functions
+NextResponse
+NextResponse
+
+NextResponse extends the Web Response API
+ with additional convenience methods.
+
+cookies
+
+Read or mutate the Set-Cookie
+ header of the response.
+
+set(name, value)
+
+Given a name, set a cookie with the given value on the response.
+
+// Given incoming request /home
+let response = NextResponse.next()
+// Set a cookie to hide the banner
+response.cookies.set('show-banner', 'false')
+// Response will have a `Set-Cookie:show-banner=false;path=/home` header
+return response
+get(name)
+
+Given a cookie name, return the value of the cookie. If the cookie is not found, undefined is returned. If multiple cookies are found, the first one is returned.
+
+// Given incoming request /home
+let response = NextResponse.next()
+// { name: 'show-banner', value: 'false', Path: '/home' }
+response.cookies.get('show-banner')
+getAll()
+
+Given a cookie name, return the values of the cookie. If no name is given, return all cookies on the response.
+
+// Given incoming request /home
+let response = NextResponse.next()
+// [
+//   { name: 'experiments', value: 'new-pricing-page', Path: '/home' },
+//   { name: 'experiments', value: 'winter-launch', Path: '/home' },
+// ]
+response.cookies.getAll('experiments')
+// Alternatively, get all cookies for the response
+response.cookies.getAll()
+delete(name)
+
+Given a cookie name, delete the cookie from the response.
+
+// Given incoming request /home
+let response = NextResponse.next()
+// Returns true for deleted, false is nothing is deleted
+response.cookies.delete('experiments')
+json()
+
+Produce a response with the given JSON body.
+
+app/api/route.ts
+TypeScript
+JavaScript
+TypeScript
+import { NextResponse } from 'next/server'
+ 
+export async function GET(request: Request) {
+  return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+}
+redirect()
+
+Produce a response that redirects to a URL
+.
+
+import { NextResponse } from 'next/server'
+ 
+return NextResponse.redirect(new URL('/new', request.url))
+
+The URL
+ can be created and modified before being used in the NextResponse.redirect() method. For example, you can use the request.nextUrl property to get the current URL, and then modify it to redirect to a different URL.
+
+import { NextResponse } from 'next/server'
+ 
+// Given an incoming request...
+const loginUrl = new URL('/login', request.url)
+// Add ?from=/incoming-url to the /login URL
+loginUrl.searchParams.set('from', request.nextUrl.pathname)
+// And redirect to the new URL
+return NextResponse.redirect(loginUrl)
+rewrite()
+
+Produce a response that rewrites (proxies) the given URL
+ while preserving the original URL.
+
+import { NextResponse } from 'next/server'
+ 
+// Incoming request: /about, browser shows /about
+// Rewritten request: /proxy, browser shows /about
+return NextResponse.rewrite(new URL('/proxy', request.url))
+next()
+
+The next() method is useful for Middleware, as it allows you to return early and continue routing.
+
+import { NextResponse } from 'next/server'
+ 
+return NextResponse.next()
+
+You can also forward headers when producing the response:
+
+import { NextResponse } from 'next/server'
+ 
+// Given an incoming request...
+const newHeaders = new Headers(request.headers)
+// Add a new header
+newHeaders.set('x-version', '123')
+// And produce a response with the new headers
+return NextResponse.next({
+  request: {
+    // New request headers
+    headers: newHeaders,
+  },
+})
+Previous
+NextRequest
+Next
+notFound
+
+Was this helpful?
+
+supported.
+Send
+Resources
+Docs
+Learn
+Showcase
+Blog
+Analytics
+Next.js Conf
+Previews
+More
+Next.js Commerce
+Contact Sales
+GitHub
+Releases
+Telemetry
+Governance
+About Vercel
+Next.js + Vercel
+Open Source Software
+GitHub
+X
+Legal
+Privacy Policy
+Cookie Preferences
+Subscribe to our newsletter
+
+Stay updated on new releases and features, guides, and case studies.
+
+Subscribe
+
+© 2024 Vercel, Inc.

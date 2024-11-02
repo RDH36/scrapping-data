@@ -1,0 +1,386 @@
+Skip to content
+Showcase
+Docs
+Blog
+Templates
+Enterprise
+Search documentation...
+Feedback
+Learn
+
+Using App Router
+
+Features available in /app
+
+Using Stable Version
+
+v15.0.2
+
+Getting Started
+Installation
+Project Structure
+Building Your Application
+Routing
+Defining Routes
+Pages
+Layouts and Templates
+Linking and Navigating
+Error Handling
+Loading UI and Streaming
+Redirecting
+Route Groups
+Project Organization
+Dynamic Routes
+Parallel Routes
+Intercepting Routes
+Route Handlers
+Middleware
+Internationalization
+Data Fetching
+Data Fetching and Caching
+Server Actions and Mutations
+Incremental Static Regeneration (ISR)
+Rendering
+Server Components
+Client Components
+Composition Patterns
+Partial Prerendering
+Runtimes
+Caching
+Styling
+CSS
+Tailwind CSS
+Sass
+CSS-in-JS
+Optimizing
+Images
+Videos
+Fonts
+Metadata
+Scripts
+Package Bundling
+Lazy Loading
+Analytics
+Instrumentation
+OpenTelemetry
+Static Assets
+Third Party Libraries
+Memory Usage
+Configuring
+TypeScript
+ESLint
+Environment Variables
+Absolute Imports and Module Path Aliases
+MDX
+src Directory
+Custom Server
+Draft Mode
+Content Security Policy
+Debugging
+Progressive Web Applications (PWA)
+Testing
+Vitest
+Jest
+Playwright
+Cypress
+Authentication
+Deploying
+Production Checklist
+Static Exports
+Multi-Zones
+Upgrading
+Codemods
+Version 15
+Version 14
+App Router Migration
+Migrating from Create React App
+Migrating from Vite
+Examples
+API Reference
+Directives
+use cache
+use client
+use server
+Components
+Font
+<Form>
+<Image>
+<Link>
+<Script>
+File Conventions
+default.js
+error.js
+instrumentation.js
+layout.js
+loading.js
+mdx-components.js
+middleware.js
+not-found.js
+page.js
+route.js
+Route Segment Config
+template.js
+Metadata Files
+favicon, icon, and apple-icon
+manifest.json
+opengraph-image and twitter-image
+robots.txt
+sitemap.xml
+Functions
+cacheTag
+connection
+cookies
+draftMode
+fetch
+generateImageMetadata
+generateMetadata
+generateSitemaps
+generateStaticParams
+generateViewport
+headers
+ImageResponse
+NextRequest
+NextResponse
+notFound
+permanentRedirect
+redirect
+revalidatePath
+revalidateTag
+unstable_after
+unstable_rethrow
+useParams
+usePathname
+useReportWebVitals
+useRouter
+useSearchParams
+useSelectedLayoutSegment
+useSelectedLayoutSegments
+userAgent
+next.config.js Options
+appDir
+assetPrefix
+basePath
+cacheLife
+compress
+crossOrigin
+cssChunking
+devIndicators
+distDir
+dynamicIO
+env
+eslint
+expireTime
+exportPathMap
+generateBuildId
+generateEtags
+headers
+httpAgentOptions
+images
+cacheHandler
+logging
+mdxRs
+onDemandEntries
+optimizePackageImports
+output
+pageExtensions
+poweredByHeader
+ppr
+productionBrowserSourceMaps
+reactCompiler
+reactMaxHeadersLength
+reactStrictMode
+redirects
+rewrites
+sassOptions
+serverActions
+serverComponentsHmrCache
+serverExternalPackages
+staleTimes
+staticGeneration*
+trailingSlash
+transpilePackages
+turbo
+typedRoutes
+typescript
+urlImports
+useLightningcss
+webpack
+webVitalsAttribution
+CLI
+create-next-app
+next CLI
+Edge Runtime
+Legacy APIs
+unstable_cache
+unstable_noStore
+Architecture
+Accessibility
+Fast Refresh
+Next.js Compiler
+Supported Browsers
+Turbopack
+Community
+Contribution Guide
+On this page
+Context parameter
+getServerSideProps return values
+props
+notFound
+redirect
+Version History
+Managed Next.js (Vercel)
+Scroll to top
+API Reference
+Functions
+getServerSideProps
+getServerSideProps
+
+When exporting a function called getServerSideProps (Server-Side Rendering) from a page, Next.js will pre-render this page on each request using the data returned by getServerSideProps. This is useful if you want to fetch data that changes often, and have the page update to show the most current data.
+
+pages/index.tsx
+TypeScript
+JavaScript
+TypeScript
+import type { InferGetServerSidePropsType, GetServerSideProps } from 'next'
+ 
+type Repo = {
+  name: string
+  stargazers_count: number
+}
+ 
+export const getServerSideProps = (async () => {
+  // Fetch data from external API
+  const res = await fetch('https://api.github.com/repos/vercel/next.js')
+  const repo: Repo = await res.json()
+  // Pass data to the page via props
+  return { props: { repo } }
+}) satisfies GetServerSideProps<{ repo: Repo }>
+ 
+export default function Page({
+  repo,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  return (
+    <main>
+      <p>{repo.stargazers_count}</p>
+    </main>
+  )
+}
+
+You can import modules in top-level scope for use in getServerSideProps. Imports used will not be bundled for the client-side. This means you can write server-side code directly in getServerSideProps, including fetching data from your database.
+
+Context parameter
+
+The context parameter is an object containing the following keys:
+
+Name	Description
+params	If this page uses a dynamic route, params contains the route parameters. If the page name is [id].js, then params will look like { id: ... }.
+req	The HTTP IncomingMessage object
+, with an additional cookies prop, which is an object with string keys mapping to string values of cookies.
+res	The HTTP response object
+.
+query	An object representing the query string, including dynamic route parameters.
+preview	(Deprecated for draftMode) preview is true if the page is in the Preview Mode and false otherwise.
+previewData	(Deprecated for draftMode) The preview data set by setPreviewData.
+draftMode	draftMode is true if the page is in the Draft Mode and false otherwise.
+resolvedUrl	A normalized version of the request URL that strips the _next/data prefix for client transitions and includes original query values.
+locale	Contains the active locale (if enabled).
+locales	Contains all supported locales (if enabled).
+defaultLocale	Contains the configured default locale (if enabled).
+getServerSideProps return values
+
+The getServerSideProps function should return an object with any one of the following properties:
+
+props
+
+The props object is a key-value pair, where each value is received by the page component. It should be a serializable object
+ so that any props passed, could be serialized with JSON.stringify
+.
+
+export async function getServerSideProps(context) {
+  return {
+    props: { message: `Next.js is awesome` }, // will be passed to the page component as props
+  }
+}
+notFound
+
+The notFound boolean allows the page to return a 404 status and 404 Page. With notFound: true, the page will return a 404 even if there was a successfully generated page before. This is meant to support use cases like user-generated content getting removed by its author.
+
+export async function getServerSideProps(context) {
+  const res = await fetch(`https://.../data`)
+  const data = await res.json()
+ 
+  if (!data) {
+    return {
+      notFound: true,
+    }
+  }
+ 
+  return {
+    props: { data }, // will be passed to the page component as props
+  }
+}
+redirect
+
+The redirect object allows redirecting to internal and external resources. It should match the shape of { destination: string, permanent: boolean }. In some rare cases, you might need to assign a custom status code for older HTTP clients to properly redirect. In these cases, you can use the statusCode property instead of the permanent property, but not both.
+
+export async function getServerSideProps(context) {
+  const res = await fetch(`https://.../data`)
+  const data = await res.json()
+ 
+  if (!data) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
+ 
+  return {
+    props: {}, // will be passed to the page component as props
+  }
+}
+Version History
+Version	Changes
+v13.4.0	App Router is now stable with simplified data fetching
+v10.0.0	locale, locales, defaultLocale, and notFound options added.
+v9.3.0	getServerSideProps introduced.
+Previous
+getInitialProps
+Next
+getStaticPaths
+
+Was this helpful?
+
+supported.
+Send
+Resources
+Docs
+Learn
+Showcase
+Blog
+Analytics
+Next.js Conf
+Previews
+More
+Next.js Commerce
+Contact Sales
+GitHub
+Releases
+Telemetry
+Governance
+About Vercel
+Next.js + Vercel
+Open Source Software
+GitHub
+X
+Legal
+Privacy Policy
+Cookie Preferences
+Subscribe to our newsletter
+
+Stay updated on new releases and features, guides, and case studies.
+
+Subscribe
+
+© 2024 Vercel, Inc.

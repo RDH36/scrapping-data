@@ -1,0 +1,340 @@
+Skip to content
+Showcase
+Docs
+Blog
+Templates
+Enterprise
+Search documentation...
+Feedback
+Learn
+
+Using App Router
+
+Features available in /app
+
+Using Stable Version
+
+v15.0.2
+
+Getting Started
+Installation
+Project Structure
+Building Your Application
+Routing
+Defining Routes
+Pages
+Layouts and Templates
+Linking and Navigating
+Error Handling
+Loading UI and Streaming
+Redirecting
+Route Groups
+Project Organization
+Dynamic Routes
+Parallel Routes
+Intercepting Routes
+Route Handlers
+Middleware
+Internationalization
+Data Fetching
+Data Fetching and Caching
+Server Actions and Mutations
+Incremental Static Regeneration (ISR)
+Rendering
+Server Components
+Client Components
+Composition Patterns
+Partial Prerendering
+Runtimes
+Caching
+Styling
+CSS
+Tailwind CSS
+Sass
+CSS-in-JS
+Optimizing
+Images
+Videos
+Fonts
+Metadata
+Scripts
+Package Bundling
+Lazy Loading
+Analytics
+Instrumentation
+OpenTelemetry
+Static Assets
+Third Party Libraries
+Memory Usage
+Configuring
+TypeScript
+ESLint
+Environment Variables
+Absolute Imports and Module Path Aliases
+MDX
+src Directory
+Custom Server
+Draft Mode
+Content Security Policy
+Debugging
+Progressive Web Applications (PWA)
+Testing
+Vitest
+Jest
+Playwright
+Cypress
+Authentication
+Deploying
+Production Checklist
+Static Exports
+Multi-Zones
+Upgrading
+Codemods
+Version 15
+Version 14
+App Router Migration
+Migrating from Create React App
+Migrating from Vite
+Examples
+API Reference
+Directives
+use cache
+use client
+use server
+Components
+Font
+<Form>
+<Image>
+<Link>
+<Script>
+File Conventions
+default.js
+error.js
+instrumentation.js
+layout.js
+loading.js
+mdx-components.js
+middleware.js
+not-found.js
+page.js
+route.js
+Route Segment Config
+template.js
+Metadata Files
+favicon, icon, and apple-icon
+manifest.json
+opengraph-image and twitter-image
+robots.txt
+sitemap.xml
+Functions
+cacheTag
+connection
+cookies
+draftMode
+fetch
+generateImageMetadata
+generateMetadata
+generateSitemaps
+generateStaticParams
+generateViewport
+headers
+ImageResponse
+NextRequest
+NextResponse
+notFound
+permanentRedirect
+redirect
+revalidatePath
+revalidateTag
+unstable_after
+unstable_rethrow
+useParams
+usePathname
+useReportWebVitals
+useRouter
+useSearchParams
+useSelectedLayoutSegment
+useSelectedLayoutSegments
+userAgent
+next.config.js Options
+appDir
+assetPrefix
+basePath
+cacheLife
+compress
+crossOrigin
+cssChunking
+devIndicators
+distDir
+dynamicIO
+env
+eslint
+expireTime
+exportPathMap
+generateBuildId
+generateEtags
+headers
+httpAgentOptions
+images
+cacheHandler
+logging
+mdxRs
+onDemandEntries
+optimizePackageImports
+output
+pageExtensions
+poweredByHeader
+ppr
+productionBrowserSourceMaps
+reactCompiler
+reactMaxHeadersLength
+reactStrictMode
+redirects
+rewrites
+sassOptions
+serverActions
+serverComponentsHmrCache
+serverExternalPackages
+staleTimes
+staticGeneration*
+trailingSlash
+transpilePackages
+turbo
+typedRoutes
+typescript
+urlImports
+useLightningcss
+webpack
+webVitalsAttribution
+CLI
+create-next-app
+next CLI
+Edge Runtime
+Legacy APIs
+unstable_cache
+unstable_noStore
+Architecture
+Accessibility
+Fast Refresh
+Next.js Compiler
+Supported Browsers
+Turbopack
+Community
+Contribution Guide
+On this page
+Adding a trailing slash
+Customizing the output directory
+Managed Next.js (Vercel)
+Scroll to top
+API Reference
+next.config.js Options
+exportPathMap
+exportPathMap
+
+This feature is exclusive to next export and currently deprecated in favor of getStaticPaths with pages or generateStaticParams with app.
+
+Examples
+
+exportPathMap allows you to specify a mapping of request paths to page destinations, to be used during export. Paths defined in exportPathMap will also be available when using next dev.
+
+Let's start with an example, to create a custom exportPathMap for an app with the following pages:
+
+pages/index.js
+pages/about.js
+pages/post.js
+
+Open next.config.js and add the following exportPathMap config:
+
+next.config.js
+module.exports = {
+  exportPathMap: async function (
+    defaultPathMap,
+    { dev, dir, outDir, distDir, buildId }
+  ) {
+    return {
+      '/': { page: '/' },
+      '/about': { page: '/about' },
+      '/p/hello-nextjs': { page: '/post', query: { title: 'hello-nextjs' } },
+      '/p/learn-nextjs': { page: '/post', query: { title: 'learn-nextjs' } },
+      '/p/deploy-nextjs': { page: '/post', query: { title: 'deploy-nextjs' } },
+    }
+  },
+}
+
+Good to know: the query field in exportPathMap cannot be used with automatically statically optimized pages or getStaticProps pages as they are rendered to HTML files at build-time and additional query information cannot be provided during next export.
+
+The pages will then be exported as HTML files, for example, /about will become /about.html.
+
+exportPathMap is an async function that receives 2 arguments: the first one is defaultPathMap, which is the default map used by Next.js. The second argument is an object with:
+
+dev - true when exportPathMap is being called in development. false when running next export. In development exportPathMap is used to define routes.
+dir - Absolute path to the project directory
+outDir - Absolute path to the out/ directory (configurable with -o). When dev is true the value of outDir will be null.
+distDir - Absolute path to the .next/ directory (configurable with the distDir config)
+buildId - The generated build id
+
+The returned object is a map of pages where the key is the pathname and the value is an object that accepts the following fields:
+
+page: String - the page inside the pages directory to render
+query: Object - the query object passed to getInitialProps when prerendering. Defaults to {}
+
+The exported pathname can also be a filename (for example, /readme.md), but you may need to set the Content-Type header to text/html when serving its content if it is different than .html.
+
+Adding a trailing slash
+
+It is possible to configure Next.js to export pages as index.html files and require trailing slashes, /about becomes /about/index.html and is routable via /about/. This was the default behavior prior to Next.js 9.
+
+To switch back and add a trailing slash, open next.config.js and enable the trailingSlash config:
+
+next.config.js
+module.exports = {
+  trailingSlash: true,
+}
+Customizing the output directory
+
+next export will use out as the default output directory, you can customize this using the -o argument, like so:
+
+Terminal
+next export -o outdir
+
+Warning: Using exportPathMap is deprecated and is overridden by getStaticPaths inside pages. We don't recommend using them together.
+
+Previous
+eslint
+Next
+generateBuildId
+
+Was this helpful?
+
+supported.
+Send
+Resources
+Docs
+Learn
+Showcase
+Blog
+Analytics
+Next.js Conf
+Previews
+More
+Next.js Commerce
+Contact Sales
+GitHub
+Releases
+Telemetry
+Governance
+About Vercel
+Next.js + Vercel
+Open Source Software
+GitHub
+X
+Legal
+Privacy Policy
+Cookie Preferences
+Subscribe to our newsletter
+
+Stay updated on new releases and features, guides, and case studies.
+
+Subscribe
+
+© 2024 Vercel, Inc.

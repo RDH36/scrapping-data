@@ -1,0 +1,393 @@
+Skip to content
+Showcase
+Docs
+Blog
+Templates
+Enterprise
+Search documentation...
+Feedback
+Learn
+
+Using App Router
+
+Features available in /app
+
+Using Stable Version
+
+v15.0.2
+
+Getting Started
+Installation
+Project Structure
+Building Your Application
+Routing
+Defining Routes
+Pages
+Layouts and Templates
+Linking and Navigating
+Error Handling
+Loading UI and Streaming
+Redirecting
+Route Groups
+Project Organization
+Dynamic Routes
+Parallel Routes
+Intercepting Routes
+Route Handlers
+Middleware
+Internationalization
+Data Fetching
+Data Fetching and Caching
+Server Actions and Mutations
+Incremental Static Regeneration (ISR)
+Rendering
+Server Components
+Client Components
+Composition Patterns
+Partial Prerendering
+Runtimes
+Caching
+Styling
+CSS
+Tailwind CSS
+Sass
+CSS-in-JS
+Optimizing
+Images
+Videos
+Fonts
+Metadata
+Scripts
+Package Bundling
+Lazy Loading
+Analytics
+Instrumentation
+OpenTelemetry
+Static Assets
+Third Party Libraries
+Memory Usage
+Configuring
+TypeScript
+ESLint
+Environment Variables
+Absolute Imports and Module Path Aliases
+MDX
+src Directory
+Custom Server
+Draft Mode
+Content Security Policy
+Debugging
+Progressive Web Applications (PWA)
+Testing
+Vitest
+Jest
+Playwright
+Cypress
+Authentication
+Deploying
+Production Checklist
+Static Exports
+Multi-Zones
+Upgrading
+Codemods
+Version 15
+Version 14
+App Router Migration
+Migrating from Create React App
+Migrating from Vite
+Examples
+API Reference
+Directives
+use cache
+use client
+use server
+Components
+Font
+<Form>
+<Image>
+<Link>
+<Script>
+File Conventions
+default.js
+error.js
+instrumentation.js
+layout.js
+loading.js
+mdx-components.js
+middleware.js
+not-found.js
+page.js
+route.js
+Route Segment Config
+template.js
+Metadata Files
+favicon, icon, and apple-icon
+manifest.json
+opengraph-image and twitter-image
+robots.txt
+sitemap.xml
+Functions
+cacheTag
+connection
+cookies
+draftMode
+fetch
+generateImageMetadata
+generateMetadata
+generateSitemaps
+generateStaticParams
+generateViewport
+headers
+ImageResponse
+NextRequest
+NextResponse
+notFound
+permanentRedirect
+redirect
+revalidatePath
+revalidateTag
+unstable_after
+unstable_rethrow
+useParams
+usePathname
+useReportWebVitals
+useRouter
+useSearchParams
+useSelectedLayoutSegment
+useSelectedLayoutSegments
+userAgent
+next.config.js Options
+appDir
+assetPrefix
+basePath
+cacheLife
+compress
+crossOrigin
+cssChunking
+devIndicators
+distDir
+dynamicIO
+env
+eslint
+expireTime
+exportPathMap
+generateBuildId
+generateEtags
+headers
+httpAgentOptions
+images
+cacheHandler
+logging
+mdxRs
+onDemandEntries
+optimizePackageImports
+output
+pageExtensions
+poweredByHeader
+ppr
+productionBrowserSourceMaps
+reactCompiler
+reactMaxHeadersLength
+reactStrictMode
+redirects
+rewrites
+sassOptions
+serverActions
+serverComponentsHmrCache
+serverExternalPackages
+staleTimes
+staticGeneration*
+trailingSlash
+transpilePackages
+turbo
+typedRoutes
+typescript
+urlImports
+useLightningcss
+webpack
+webVitalsAttribution
+CLI
+create-next-app
+next CLI
+Edge Runtime
+Legacy APIs
+unstable_cache
+unstable_noStore
+Architecture
+Accessibility
+Fast Refresh
+Next.js Compiler
+Supported Browsers
+Turbopack
+Community
+Contribution Guide
+On this page
+useRouter()
+Migrating from next/router
+Examples
+Router events
+Disabling scroll to top
+Version History
+Managed Next.js (Vercel)
+Scroll to top
+API Reference
+Functions
+useRouter
+useRouter
+
+The useRouter hook allows you to programmatically change routes inside Client Components.
+
+Recommendation: Use the <Link> component for navigation unless you have a specific requirement for using useRouter.
+
+app/example-client-component.tsx
+TypeScript
+JavaScript
+TypeScript
+'use client'
+ 
+import { useRouter } from 'next/navigation'
+ 
+export default function Page() {
+  const router = useRouter()
+ 
+  return (
+    <button type="button" onClick={() => router.push('/dashboard')}>
+      Dashboard
+    </button>
+  )
+}
+useRouter()
+router.push(href: string, { scroll: boolean }): Perform a client-side navigation to the provided route. Adds a new entry into the browser’s history
+ stack.
+router.replace(href: string, { scroll: boolean }): Perform a client-side navigation to the provided route without adding a new entry into the browser’s history stack
+.
+router.refresh(): Refresh the current route. Making a new request to the server, re-fetching data requests, and re-rendering Server Components. The client will merge the updated React Server Component payload without losing unaffected client-side React (e.g. useState) or browser state (e.g. scroll position).
+router.prefetch(href: string): Prefetch the provided route for faster client-side transitions.
+router.back(): Navigate back to the previous route in the browser’s history stack.
+router.forward(): Navigate forwards to the next page in the browser’s history stack.
+
+Good to know:
+
+The <Link> component automatically prefetch routes as they become visible in the viewport.
+refresh() could re-produce the same result if fetch requests are cached. Other Dynamic APIs like cookies and headers could also change the response.
+Migrating from next/router
+The useRouter hook should be imported from next/navigation and not next/router when using the App Router
+The pathname string has been removed and is replaced by usePathname()
+The query object has been removed and is replaced by useSearchParams()
+router.events has been replaced. See below.
+
+View the full migration guide.
+
+Examples
+Router events
+
+You can listen for page changes by composing other Client Component hooks like usePathname and useSearchParams.
+
+app/components/navigation-events.js
+'use client'
+ 
+import { useEffect } from 'react'
+import { usePathname, useSearchParams } from 'next/navigation'
+ 
+export function NavigationEvents() {
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+ 
+  useEffect(() => {
+    const url = `${pathname}?${searchParams}`
+    console.log(url)
+    // You can now use the current URL
+    // ...
+  }, [pathname, searchParams])
+ 
+  return '...'
+}
+
+Which can be imported into a layout.
+
+app/layout.js
+import { Suspense } from 'react'
+import { NavigationEvents } from './components/navigation-events'
+ 
+export default function Layout({ children }) {
+  return (
+    <html lang="en">
+      <body>
+        {children}
+ 
+        <Suspense fallback={null}>
+          <NavigationEvents />
+        </Suspense>
+      </body>
+    </html>
+  )
+}
+
+Good to know: <NavigationEvents> is wrapped in a Suspense boundary becauseuseSearchParams() causes client-side rendering up to the closest Suspense boundary during static rendering. Learn more.
+
+Disabling scroll to top
+
+By default, Next.js will scroll to the top of the page when navigating to a new route. You can disable this behavior by passing scroll: false to router.push() or router.replace().
+
+app/example-client-component.tsx
+TypeScript
+JavaScript
+TypeScript
+'use client'
+ 
+import { useRouter } from 'next/navigation'
+ 
+export default function Page() {
+  const router = useRouter()
+ 
+  return (
+    <button
+      type="button"
+      onClick={() => router.push('/dashboard', { scroll: false })}
+    >
+      Dashboard
+    </button>
+  )
+}
+Version History
+Version	Changes
+v13.0.0	useRouter from next/navigation introduced.
+Previous
+useReportWebVitals
+Next
+useSearchParams
+
+Was this helpful?
+
+supported.
+Send
+Resources
+Docs
+Learn
+Showcase
+Blog
+Analytics
+Next.js Conf
+Previews
+More
+Next.js Commerce
+Contact Sales
+GitHub
+Releases
+Telemetry
+Governance
+About Vercel
+Next.js + Vercel
+Open Source Software
+GitHub
+X
+Legal
+Privacy Policy
+Cookie Preferences
+Subscribe to our newsletter
+
+Stay updated on new releases and features, guides, and case studies.
+
+Subscribe
+
+© 2024 Vercel, Inc.

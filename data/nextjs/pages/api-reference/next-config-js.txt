@@ -1,0 +1,452 @@
+Skip to content
+Showcase
+Docs
+Blog
+Templates
+Enterprise
+Search documentation...
+Feedback
+Learn
+
+Using App Router
+
+Features available in /app
+
+Using Stable Version
+
+v15.0.2
+
+Getting Started
+Installation
+Project Structure
+Building Your Application
+Routing
+Defining Routes
+Pages
+Layouts and Templates
+Linking and Navigating
+Error Handling
+Loading UI and Streaming
+Redirecting
+Route Groups
+Project Organization
+Dynamic Routes
+Parallel Routes
+Intercepting Routes
+Route Handlers
+Middleware
+Internationalization
+Data Fetching
+Data Fetching and Caching
+Server Actions and Mutations
+Incremental Static Regeneration (ISR)
+Rendering
+Server Components
+Client Components
+Composition Patterns
+Partial Prerendering
+Runtimes
+Caching
+Styling
+CSS
+Tailwind CSS
+Sass
+CSS-in-JS
+Optimizing
+Images
+Videos
+Fonts
+Metadata
+Scripts
+Package Bundling
+Lazy Loading
+Analytics
+Instrumentation
+OpenTelemetry
+Static Assets
+Third Party Libraries
+Memory Usage
+Configuring
+TypeScript
+ESLint
+Environment Variables
+Absolute Imports and Module Path Aliases
+MDX
+src Directory
+Custom Server
+Draft Mode
+Content Security Policy
+Debugging
+Progressive Web Applications (PWA)
+Testing
+Vitest
+Jest
+Playwright
+Cypress
+Authentication
+Deploying
+Production Checklist
+Static Exports
+Multi-Zones
+Upgrading
+Codemods
+Version 15
+Version 14
+App Router Migration
+Migrating from Create React App
+Migrating from Vite
+Examples
+API Reference
+Directives
+use cache
+use client
+use server
+Components
+Font
+<Form>
+<Image>
+<Link>
+<Script>
+File Conventions
+default.js
+error.js
+instrumentation.js
+layout.js
+loading.js
+mdx-components.js
+middleware.js
+not-found.js
+page.js
+route.js
+Route Segment Config
+template.js
+Metadata Files
+favicon, icon, and apple-icon
+manifest.json
+opengraph-image and twitter-image
+robots.txt
+sitemap.xml
+Functions
+cacheTag
+connection
+cookies
+draftMode
+fetch
+generateImageMetadata
+generateMetadata
+generateSitemaps
+generateStaticParams
+generateViewport
+headers
+ImageResponse
+NextRequest
+NextResponse
+notFound
+permanentRedirect
+redirect
+revalidatePath
+revalidateTag
+unstable_after
+unstable_rethrow
+useParams
+usePathname
+useReportWebVitals
+useRouter
+useSearchParams
+useSelectedLayoutSegment
+useSelectedLayoutSegments
+userAgent
+next.config.js Options
+appDir
+assetPrefix
+basePath
+cacheLife
+compress
+crossOrigin
+cssChunking
+devIndicators
+distDir
+dynamicIO
+env
+eslint
+expireTime
+exportPathMap
+generateBuildId
+generateEtags
+headers
+httpAgentOptions
+images
+cacheHandler
+logging
+mdxRs
+onDemandEntries
+optimizePackageImports
+output
+pageExtensions
+poweredByHeader
+ppr
+productionBrowserSourceMaps
+reactCompiler
+reactMaxHeadersLength
+reactStrictMode
+redirects
+rewrites
+sassOptions
+serverActions
+serverComponentsHmrCache
+serverExternalPackages
+staleTimes
+staticGeneration*
+trailingSlash
+transpilePackages
+turbo
+typedRoutes
+typescript
+urlImports
+useLightningcss
+webpack
+webVitalsAttribution
+CLI
+create-next-app
+next CLI
+Edge Runtime
+Legacy APIs
+unstable_cache
+unstable_noStore
+Architecture
+Accessibility
+Fast Refresh
+Next.js Compiler
+Supported Browsers
+Turbopack
+Community
+Contribution Guide
+On this page
+ECMAScript Modules
+Configuration as a Function
+Async Configuration
+Phase
+TypeScript
+Managed Next.js (Vercel)
+Scroll to top
+Pages Router
+API Reference
+next.config.js Options
+next.config.js Options
+
+Next.js can be configured through a next.config.js file in the root of your project directory (for example, by package.json) with a default export.
+
+next.config.js
+// @ts-check
+ 
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  /* config options here */
+}
+ 
+module.exports = nextConfig
+ECMAScript Modules
+
+next.config.js is a regular Node.js module, not a JSON file. It gets used by the Next.js server and build phases, and it's not included in the browser build.
+
+If you need ECMAScript modules
+, you can use next.config.mjs:
+
+next.config.mjs
+// @ts-check
+ 
+/**
+ * @type {import('next').NextConfig}
+ */
+const nextConfig = {
+  /* config options here */
+}
+ 
+export default nextConfig
+
+Good to know: next.config with the .cjs, .cts, or .mts extensions are currently not supported.
+
+Configuration as a Function
+
+You can also use a function:
+
+next.config.mjs
+// @ts-check
+ 
+export default (phase, { defaultConfig }) => {
+  /**
+   * @type {import('next').NextConfig}
+   */
+  const nextConfig = {
+    /* config options here */
+  }
+  return nextConfig
+}
+Async Configuration
+
+Since Next.js 12.1.0, you can use an async function:
+
+next.config.js
+// @ts-check
+ 
+module.exports = async (phase, { defaultConfig }) => {
+  /**
+   * @type {import('next').NextConfig}
+   */
+  const nextConfig = {
+    /* config options here */
+  }
+  return nextConfig
+}
+Phase
+
+phase is the current context in which the configuration is loaded. You can see the available phases
+. Phases can be imported from next/constants:
+
+next.config.js
+// @ts-check
+ 
+const { PHASE_DEVELOPMENT_SERVER } = require('next/constants')
+ 
+module.exports = (phase, { defaultConfig }) => {
+  if (phase === PHASE_DEVELOPMENT_SERVER) {
+    return {
+      /* development only config options here */
+    }
+  }
+ 
+  return {
+    /* config options for all phases except development here */
+  }
+}
+TypeScript
+
+This feature is available from Next.js canary.
+
+If you are using TypeScript in your project, you can use next.config.ts to use TypeScript in your configuration:
+
+next.config.ts
+import type { NextConfig } from 'next'
+ 
+const nextConfig: NextConfig = {
+  /* config options here */
+}
+ 
+export default nextConfig
+
+The commented lines are the place where you can put the configs allowed by next.config.js, which are defined in this file
+.
+
+However, none of the configs are required, and it's not necessary to understand what each config does. Instead, search for the features you need to enable or modify in this section and they will show you what to do.
+
+Avoid using new JavaScript features not available in your target Node.js version. next.config.js will not be parsed by Webpack or Babel.
+
+This page documents all the available configuration options:
+
+assetPrefix
+Learn how to use the assetPrefix config option to configure your CDN.
+basePath
+Use `basePath` to deploy a Next.js application under a sub-path of a domain.
+bundlePagesRouterDependencies
+Enable automatic dependency bundling for Pages Router
+compress
+Next.js provides gzip compression to compress rendered content and static files, it only works with the server target. Learn more about it here.
+crossOrigin
+Use the `crossOrigin` option to add a crossOrigin tag on the `script` tags generated by `next/script` and `next/head`.
+devIndicators
+Optimized pages include an indicator to let you know if it's being statically optimized. You can opt-out of it here.
+distDir
+Set a custom build directory to use instead of the default .next directory.
+env
+Learn to add and access environment variables in your Next.js application at build time.
+eslint
+Next.js reports ESLint errors and warnings during builds by default. Learn how to opt-out of this behavior here.
+exportPathMap
+Customize the pages that will be exported as HTML files when using `next export`.
+generateBuildId
+Configure the build id, which is used to identify the current build in which your application is being served.
+generateEtags
+Next.js will generate etags for every page by default. Learn more about how to disable etag generation here.
+headers
+Add custom HTTP headers to your Next.js app.
+httpAgentOptions
+Next.js will automatically use HTTP Keep-Alive by default. Learn more about how to disable HTTP Keep-Alive here.
+images
+Custom configuration for the next/image loader
+onDemandEntries
+Configure how Next.js will dispose and keep in memory pages created in development.
+optimizePackageImports
+API Reference for optimizePackageImports Next.js Config Option
+output
+Next.js automatically traces which files are needed by each page to allow for easy deployment of your application. Learn how it works here.
+pageExtensions
+Extend the default page extensions used by Next.js when resolving pages in the Pages Router.
+poweredByHeader
+Next.js will add the `x-powered-by` header by default. Learn to opt-out of it here.
+productionBrowserSourceMaps
+Enables browser source map generation during the production build.
+reactStrictMode
+The complete Next.js runtime is now Strict Mode-compliant, learn how to opt-in
+redirects
+Add redirects to your Next.js app.
+rewrites
+Add rewrites to your Next.js app.
+Runtime Config
+Add client and server runtime configuration to your Next.js app.
+serverExternalPackages
+Opt-out specific dependencies from the dependency bundling enabled by `bundlePagesRouterDependencies`.
+trailingSlash
+Configure Next.js pages to resolve with or without a trailing slash.
+transpilePackages
+Automatically transpile and bundle dependencies from local packages (like monorepos) or from external dependencies (`node_modules`).
+turbo
+Configure Next.js with Turbopack-specific options
+typescript
+Next.js reports TypeScript errors by default. Learn to opt-out of this behavior here.
+urlImports
+Configure Next.js to allow importing modules from external URLs.
+useLightningcss
+Enable experimental support for Lightning CSS.
+webpack
+Learn how to customize the webpack config used by Next.js
+webVitalsAttribution
+Learn how to use the webVitalsAttribution option to pinpoint the source of Web Vitals issues.
+Previous
+userAgent
+Next
+assetPrefix
+
+Was this helpful?
+
+supported.
+Send
+Resources
+Docs
+Learn
+Showcase
+Blog
+Analytics
+Next.js Conf
+Previews
+More
+Next.js Commerce
+Contact Sales
+GitHub
+Releases
+Telemetry
+Governance
+About Vercel
+Next.js + Vercel
+Open Source Software
+GitHub
+X
+Legal
+Privacy Policy
+Cookie Preferences
+Subscribe to our newsletter
+
+Stay updated on new releases and features, guides, and case studies.
+
+Subscribe
+
+© 2024 Vercel, Inc.

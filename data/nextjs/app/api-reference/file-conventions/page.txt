@@ -1,0 +1,412 @@
+Skip to content
+Showcase
+Docs
+Blog
+Templates
+Enterprise
+Search documentation...
+Feedback
+Learn
+
+Using App Router
+
+Features available in /app
+
+Using Stable Version
+
+v15.0.2
+
+Getting Started
+Installation
+Project Structure
+Building Your Application
+Routing
+Defining Routes
+Pages
+Layouts and Templates
+Linking and Navigating
+Error Handling
+Loading UI and Streaming
+Redirecting
+Route Groups
+Project Organization
+Dynamic Routes
+Parallel Routes
+Intercepting Routes
+Route Handlers
+Middleware
+Internationalization
+Data Fetching
+Data Fetching and Caching
+Server Actions and Mutations
+Incremental Static Regeneration (ISR)
+Rendering
+Server Components
+Client Components
+Composition Patterns
+Partial Prerendering
+Runtimes
+Caching
+Styling
+CSS
+Tailwind CSS
+Sass
+CSS-in-JS
+Optimizing
+Images
+Videos
+Fonts
+Metadata
+Scripts
+Package Bundling
+Lazy Loading
+Analytics
+Instrumentation
+OpenTelemetry
+Static Assets
+Third Party Libraries
+Memory Usage
+Configuring
+TypeScript
+ESLint
+Environment Variables
+Absolute Imports and Module Path Aliases
+MDX
+src Directory
+Custom Server
+Draft Mode
+Content Security Policy
+Debugging
+Progressive Web Applications (PWA)
+Testing
+Vitest
+Jest
+Playwright
+Cypress
+Authentication
+Deploying
+Production Checklist
+Static Exports
+Multi-Zones
+Upgrading
+Codemods
+Version 15
+Version 14
+App Router Migration
+Migrating from Create React App
+Migrating from Vite
+Examples
+API Reference
+Directives
+use cache
+use client
+use server
+Components
+Font
+<Form>
+<Image>
+<Link>
+<Script>
+File Conventions
+default.js
+error.js
+instrumentation.js
+layout.js
+loading.js
+mdx-components.js
+middleware.js
+not-found.js
+page.js
+route.js
+Route Segment Config
+template.js
+Metadata Files
+favicon, icon, and apple-icon
+manifest.json
+opengraph-image and twitter-image
+robots.txt
+sitemap.xml
+Functions
+cacheTag
+connection
+cookies
+draftMode
+fetch
+generateImageMetadata
+generateMetadata
+generateSitemaps
+generateStaticParams
+generateViewport
+headers
+ImageResponse
+NextRequest
+NextResponse
+notFound
+permanentRedirect
+redirect
+revalidatePath
+revalidateTag
+unstable_after
+unstable_rethrow
+useParams
+usePathname
+useReportWebVitals
+useRouter
+useSearchParams
+useSelectedLayoutSegment
+useSelectedLayoutSegments
+userAgent
+next.config.js Options
+appDir
+assetPrefix
+basePath
+cacheLife
+compress
+crossOrigin
+cssChunking
+devIndicators
+distDir
+dynamicIO
+env
+eslint
+expireTime
+exportPathMap
+generateBuildId
+generateEtags
+headers
+httpAgentOptions
+images
+cacheHandler
+logging
+mdxRs
+onDemandEntries
+optimizePackageImports
+output
+pageExtensions
+poweredByHeader
+ppr
+productionBrowserSourceMaps
+reactCompiler
+reactMaxHeadersLength
+reactStrictMode
+redirects
+rewrites
+sassOptions
+serverActions
+serverComponentsHmrCache
+serverExternalPackages
+staleTimes
+staticGeneration*
+trailingSlash
+transpilePackages
+turbo
+typedRoutes
+typescript
+urlImports
+useLightningcss
+webpack
+webVitalsAttribution
+CLI
+create-next-app
+next CLI
+Edge Runtime
+Legacy APIs
+unstable_cache
+unstable_noStore
+Architecture
+Accessibility
+Fast Refresh
+Next.js Compiler
+Supported Browsers
+Turbopack
+Community
+Contribution Guide
+On this page
+Reference
+Props
+params (optional)
+searchParams (optional)
+Displaying content based on params
+Handling filtering with searchParams
+Reading searchParams and params in Client Components
+Version History
+Managed Next.js (Vercel)
+Scroll to top
+API Reference
+File Conventions
+page.js
+page.js
+
+The page file is used to define a page in your Next.js application.
+
+app/blog/[slug]/page.tsx
+TypeScript
+JavaScript
+TypeScript
+export default function Page({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
+  return <h1>My Page</h1>
+}
+Reference
+Props
+params (optional)
+
+A promise that resolves to an object containing the dynamic route parameters from the root segment down to that page.
+
+app/shop/[slug]/page.tsx
+TypeScript
+JavaScript
+TypeScript
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  const slug = (await params).slug
+}
+Example Route	URL	params
+app/shop/[slug]/page.js	/shop/1	Promise<{ slug: '1' }>
+app/shop/[category]/[item]/page.js	/shop/1/2	Promise<{ category: '1', item: '2' }>
+app/shop/[...slug]/page.js	/shop/1/2	Promise<{ slug: ['1', '2'] }>
+Since the params prop is a promise. You must use async/await or React's use
+ function to access the values.
+In version 14 and earlier, params was a synchronous prop. To help with backwards compatability, you can still access it synchronously in Next.js 15, but this behavior will be deprecated in the future.
+searchParams (optional)
+
+A promise that resolves to an object containing the search parameters
+ of the current URL. For example:
+
+app/shop/page.tsx
+TypeScript
+JavaScript
+TypeScript
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
+  const filters = (await searchParams).filters
+}
+Example URL	searchParams
+/shop?a=1	Promise<{ a: '1' }>
+/shop?a=1&b=2	Promise<{ a: '1', b: '2' }>
+/shop?a=1&a=2	Promise<{ a: ['1', '2'] }>
+Since the searchParams prop is a promise. You must use async/await or React's use
+ function to access the values.
+In version 14 and earlier, searchParams was a synchronous prop. To help with backwards compatability, you can still access it synchronously in Next.js 15, but this behavior will be deprecated in the future.
+searchParams is a Dynamic API whose values cannot be known ahead of time. Using it will opt the page into dynamic rendering at request time.
+searchParams is a plain JavaScript object, not a URLSearchParams instance.
+
+## Examples
+
+Displaying content based on params
+
+Using dynamic route segments, you can display or fetch specific content for the page based on the params prop.
+
+app/blog/[slug]/page.tsx
+TypeScript
+JavaScript
+TypeScript
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  const { slug } = await params
+  return <h1>Blog Post: {slug}</h1>
+}
+Handling filtering with searchParams
+
+You can use the searchParams prop to handle filtering, pagination, or sorting based on the query string of the URL.
+
+app/shop/page.tsx
+TypeScript
+JavaScript
+TypeScript
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
+  const { page = '1', sort = 'asc', query = '' } = await searchParams
+ 
+  return (
+    <div>
+      <h1>Product Listing</h1>
+      <p>Search query: {query}</p>
+      <p>Current page: {page}</p>
+      <p>Sort order: {sort}</p>
+    </div>
+  )
+}
+Reading searchParams and params in Client Components
+
+To use searchParams and params in a Client Component (which cannot be async), you can use React's use
+ function to read the promise:
+
+app/page.tsx
+TypeScript
+JavaScript
+TypeScript
+'use client'
+ 
+import { use } from 'react'
+ 
+export function Page({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
+  const { slug } = use(params)
+  const { query } = use(searchParams)
+}
+Version History
+Version	Changes
+v15.0.0-RC	params and searchParams are now promises. A codemod is available.
+v13.0.0	page introduced.
+Previous
+not-found.js
+Next
+route.js
+
+Was this helpful?
+
+supported.
+Send
+Resources
+Docs
+Learn
+Showcase
+Blog
+Analytics
+Next.js Conf
+Previews
+More
+Next.js Commerce
+Contact Sales
+GitHub
+Releases
+Telemetry
+Governance
+About Vercel
+Next.js + Vercel
+Open Source Software
+GitHub
+X
+Legal
+Privacy Policy
+Cookie Preferences
+Subscribe to our newsletter
+
+Stay updated on new releases and features, guides, and case studies.
+
+Subscribe
+
+© 2024 Vercel, Inc.

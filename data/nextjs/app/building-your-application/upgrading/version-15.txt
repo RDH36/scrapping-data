@@ -1,0 +1,744 @@
+Skip to content
+Showcase
+Docs
+Blog
+Templates
+Enterprise
+Search documentation...
+Feedback
+Learn
+
+Using App Router
+
+Features available in /app
+
+Using Stable Version
+
+v15.0.2
+
+Getting Started
+Installation
+Project Structure
+Building Your Application
+Routing
+Defining Routes
+Pages
+Layouts and Templates
+Linking and Navigating
+Error Handling
+Loading UI and Streaming
+Redirecting
+Route Groups
+Project Organization
+Dynamic Routes
+Parallel Routes
+Intercepting Routes
+Route Handlers
+Middleware
+Internationalization
+Data Fetching
+Data Fetching and Caching
+Server Actions and Mutations
+Incremental Static Regeneration (ISR)
+Rendering
+Server Components
+Client Components
+Composition Patterns
+Partial Prerendering
+Runtimes
+Caching
+Styling
+CSS
+Tailwind CSS
+Sass
+CSS-in-JS
+Optimizing
+Images
+Videos
+Fonts
+Metadata
+Scripts
+Package Bundling
+Lazy Loading
+Analytics
+Instrumentation
+OpenTelemetry
+Static Assets
+Third Party Libraries
+Memory Usage
+Configuring
+TypeScript
+ESLint
+Environment Variables
+Absolute Imports and Module Path Aliases
+MDX
+src Directory
+Custom Server
+Draft Mode
+Content Security Policy
+Debugging
+Progressive Web Applications (PWA)
+Testing
+Vitest
+Jest
+Playwright
+Cypress
+Authentication
+Deploying
+Production Checklist
+Static Exports
+Multi-Zones
+Upgrading
+Codemods
+Version 15
+Version 14
+App Router Migration
+Migrating from Create React App
+Migrating from Vite
+Examples
+API Reference
+Directives
+use cache
+use client
+use server
+Components
+Font
+<Form>
+<Image>
+<Link>
+<Script>
+File Conventions
+default.js
+error.js
+instrumentation.js
+layout.js
+loading.js
+mdx-components.js
+middleware.js
+not-found.js
+page.js
+route.js
+Route Segment Config
+template.js
+Metadata Files
+favicon, icon, and apple-icon
+manifest.json
+opengraph-image and twitter-image
+robots.txt
+sitemap.xml
+Functions
+cacheTag
+connection
+cookies
+draftMode
+fetch
+generateImageMetadata
+generateMetadata
+generateSitemaps
+generateStaticParams
+generateViewport
+headers
+ImageResponse
+NextRequest
+NextResponse
+notFound
+permanentRedirect
+redirect
+revalidatePath
+revalidateTag
+unstable_after
+unstable_rethrow
+useParams
+usePathname
+useReportWebVitals
+useRouter
+useSearchParams
+useSelectedLayoutSegment
+useSelectedLayoutSegments
+userAgent
+next.config.js Options
+appDir
+assetPrefix
+basePath
+cacheLife
+compress
+crossOrigin
+cssChunking
+devIndicators
+distDir
+dynamicIO
+env
+eslint
+expireTime
+exportPathMap
+generateBuildId
+generateEtags
+headers
+httpAgentOptions
+images
+cacheHandler
+logging
+mdxRs
+onDemandEntries
+optimizePackageImports
+output
+pageExtensions
+poweredByHeader
+ppr
+productionBrowserSourceMaps
+reactCompiler
+reactMaxHeadersLength
+reactStrictMode
+redirects
+rewrites
+sassOptions
+serverActions
+serverComponentsHmrCache
+serverExternalPackages
+staleTimes
+staticGeneration*
+trailingSlash
+transpilePackages
+turbo
+typedRoutes
+typescript
+urlImports
+useLightningcss
+webpack
+webVitalsAttribution
+CLI
+create-next-app
+next CLI
+Edge Runtime
+Legacy APIs
+unstable_cache
+unstable_noStore
+Architecture
+Accessibility
+Fast Refresh
+Next.js Compiler
+Supported Browsers
+Turbopack
+Community
+Contribution Guide
+On this page
+Upgrading from 14 to 15
+React 19
+Async Request APIs (Breaking change)
+cookies
+Recommended Async Usage
+Temporary Synchronous Usage
+headers
+Recommended Async Usage
+Temporary Synchronous Usage
+draftMode
+Recommended Async Usage
+Temporary Synchronous Usage
+params & searchParams
+Asynchronous Layout
+Synchronous Layout
+Asynchronous Page
+Synchronous Page
+Route Handlers
+runtime configuration (Breaking change)
+fetch requests
+Route Handlers
+Client-side Router Cache
+next/font
+bundlePagesRouterDependencies
+serverExternalPackages
+Speed Insights
+NextRequest Geolocation
+Managed Next.js (Vercel)
+Scroll to top
+Building Your Application
+Upgrading
+Version 15
+Version 15
+Upgrading from 14 to 15
+
+To update to Next.js version 15, you can use the upgrade codemod:
+
+Terminal
+npx @next/codemod@canary upgrade latest
+
+If you prefer to do it manually, ensure that you're installing the latest Next & React RC, e.g.:
+
+Terminal
+npm i next@latest react@rc react-dom@rc eslint-config-next@latest
+
+Good to know:
+
+If you see a peer dependencies warning, you may need to update react and react-dom to the suggested versions, or you use the --force or --legacy-peer-deps flag to ignore the warning. This won't be necessary once both Next.js 15 and React 19 are stable.
+If you are using TypeScript, you'll need to temporarily override the React types. See the React 19 RC upgrade guide
+ for more information.
+React 19
+The minimum versions of react and react-dom is now 19.
+useFormState has been replaced by useActionState. The useFormState hook is still available in React 19, but it is deprecated and will be removed in a future release. useActionState is recommended and includes additional properties like reading the pending state directly. Learn more
+.
+useFormStatus now includes additional keys like data, method, and action. If you are not using React 19, only the pending key is available. Learn more
+.
+Read more in the React 19 upgrade guide
+.
+Async Request APIs (Breaking change)
+
+Previously synchronous Dynamic APIs that rely on runtime information are now asynchronous:
+
+cookies
+headers
+draftMode
+params in layout.js, page.js, route.js, default.js, opengraph-image, twitter-image, icon, and apple-icon.
+searchParams in page.js
+
+To ease the burden of migration, a codemod is available to automate the process and the APIs can temporarily be accessed synchronously.
+
+cookies
+Recommended Async Usage
+import { cookies } from 'next/headers'
+ 
+// Before
+const cookieStore = cookies()
+const token = cookieStore.get('token')
+ 
+// After
+const cookieStore = await cookies()
+const token = cookieStore.get('token')
+Temporary Synchronous Usage
+app/page.tsx
+TypeScript
+JavaScript
+TypeScript
+import { cookies, type UnsafeUnwrappedCookies } from 'next/headers'
+ 
+// Before
+const cookieStore = cookies()
+const token = cookieStore.get('token')
+ 
+// After
+const cookieStore = cookies() as unknown as UnsafeUnwrappedCookies
+// will log a warning in dev
+const token = cookieStore.get('token')
+headers
+Recommended Async Usage
+import { headers } from 'next/headers'
+ 
+// Before
+const headersList = headers()
+const userAgent = headersList.get('user-agent')
+ 
+// After
+const headersList = await headers()
+const userAgent = headersList.get('user-agent')
+Temporary Synchronous Usage
+app/page.tsx
+TypeScript
+JavaScript
+TypeScript
+import { headers, type UnsafeUnwrappedHeaders } from 'next/headers'
+ 
+// Before
+const headersList = headers()
+const userAgent = headersList.get('user-agent')
+ 
+// After
+const headersList = headers() as unknown as UnsafeUnwrappedHeaders
+// will log a warning in dev
+const userAgent = headersList.get('user-agent')
+draftMode
+Recommended Async Usage
+import { draftMode } from 'next/headers'
+ 
+// Before
+const { isEnabled } = draftMode()
+ 
+// After
+const { isEnabled } = await draftMode()
+Temporary Synchronous Usage
+app/page.tsx
+TypeScript
+JavaScript
+TypeScript
+import { draftMode, type UnsafeUnwrappedDraftMode } from 'next/headers'
+ 
+// Before
+const { isEnabled } = draftMode()
+ 
+// After
+// will log a warning in dev
+const { isEnabled } = draftMode() as unknown as UnsafeUnwrappedDraftMode
+params & searchParams
+Asynchronous Layout
+app/layout.tsx
+TypeScript
+JavaScript
+TypeScript
+// Before
+type Params = { slug: string }
+ 
+export function generateMetadata({ params }: { params: Params }) {
+  const { slug } = params
+}
+ 
+export default async function Layout({
+  children,
+  params,
+}: {
+  children: React.ReactNode
+  params: Params
+}) {
+  const { slug } = params
+}
+ 
+// After
+type Params = Promise<{ slug: string }>
+ 
+export async function generateMetadata({ params }: { params: Params }) {
+  const { slug } = await params
+}
+ 
+export default async function Layout({
+  children,
+  params,
+}: {
+  children: React.ReactNode
+  params: Params
+}) {
+  const { slug } = await params
+}
+Synchronous Layout
+app/layout.tsx
+TypeScript
+JavaScript
+TypeScript
+// Before
+type Params = { slug: string }
+ 
+export default function Layout({
+  children,
+  params,
+}: {
+  children: React.ReactNode
+  params: Params
+}) {
+  const { slug } = params
+}
+ 
+// After
+import { use } from 'react'
+ 
+type Params = Promise<{ slug: string }>
+ 
+export default function Layout(props: {
+  children: React.ReactNode
+  params: Params
+}) {
+  const params = use(props.params)
+  const slug = params.slug
+}
+Asynchronous Page
+app/page.tsx
+TypeScript
+JavaScript
+TypeScript
+// Before
+type Params = { slug: string }
+type SearchParams = { [key: string]: string | string[] | undefined }
+ 
+export function generateMetadata({
+  params,
+  searchParams,
+}: {
+  params: Params
+  searchParams: SearchParams
+}) {
+  const { slug } = params
+  const { query } = searchParams
+}
+ 
+export default async function Page({
+  params,
+  searchParams,
+}: {
+  params: Params
+  searchParams: SearchParams
+}) {
+  const { slug } = params
+  const { query } = searchParams
+}
+ 
+// After
+type Params = Promise<{ slug: string }>
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
+ 
+export async function generateMetadata(props: {
+  params: Params
+  searchParams: SearchParams
+}) {
+  const params = await props.params
+  const searchParams = await props.searchParams
+  const slug = params.slug
+  const query = searchParams.query
+}
+ 
+export default async function Page(props: {
+  params: Params
+  searchParams: SearchParams
+}) {
+  const params = await props.params
+  const searchParams = await props.searchParams
+  const slug = params.slug
+  const query = searchParams.query
+}
+Synchronous Page
+'use client'
+ 
+// Before
+type Params = { slug: string }
+type SearchParams = { [key: string]: string | string[] | undefined }
+ 
+export default function Page({
+  params,
+  searchParams,
+}: {
+  params: Params
+  searchParams: SearchParams
+}) {
+  const { slug } = params
+  const { query } = searchParams
+}
+ 
+// After
+import { use } from 'react'
+ 
+type Params = Promise<{ slug: string }>
+type SearchParams = { [key: string]: string | string[] | undefined }
+ 
+export default function Page(props: {
+  params: Params
+  searchParams: SearchParams
+}) {
+  const params = use(props.params)
+  const searchParams = use(props.searchParams)
+  const slug = params.slug
+  const query = searchParams.query
+}
+// Before
+export default function Page({ params, searchParams }) {
+  const { slug } = params
+  const { query } = searchParams
+}
+ 
+// After
+import { use } from "react"
+ 
+export default function Page(props) {
+  const params = use(props.params)
+  const searchParams = use(props.searchParams)
+  const slug = params.slug
+  const query = searchParams.query
+}
+ 
+Route Handlers
+app/api/route.ts
+// Before
+type Params = { slug: string }
+ 
+export async function GET(request: Request, segmentData: { params: Params }) {
+  const params = segmentData.params
+  const slug = params.slug
+}
+ 
+// After
+type Params = Promise<{ slug: string }>
+ 
+export async function GET(request: Request, segmentData: { params: Params }) {
+  const params = await segmentData.params
+  const slug = params.slug
+}
+app/api/route.js
+// Before
+export async function GET(request, segmentData) {
+  const params = segmentData.params
+  const slug = params.slug
+}
+ 
+// After
+export async function GET(request, segmentData) {
+  const params = await segmentData.params
+  const slug = params.slug
+}
+runtime configuration (Breaking change)
+
+The runtime segment configuration previously supported a value of experimental-edge in addition to edge. Both configurations refer to the same thing, and to simplify the options, we will now error if experimental-edge is used. To fix this, update your runtime configuration to edge. A codemod is available to automatically do this.
+
+fetch requests
+
+fetch requests are no longer cached by default.
+
+To opt specific fetch requests into caching, you can pass the cache: 'force-cache' option.
+
+app/layout.js
+export default async function RootLayout() {
+  const a = await fetch('https://...') // Not Cached
+  const b = await fetch('https://...', { cache: 'force-cache' }) // Cached
+ 
+  // ...
+}
+
+To opt all fetch requests in a layout or page into caching, you can use the export const fetchCache = 'default-cache' segment config option. If individual fetch requests specify a cache option, that will be used instead.
+
+app/layout.js
+// Since this is the root layout, all fetch requests in the app
+// that don't set their own cache option will be cached.
+export const fetchCache = 'default-cache'
+ 
+export default async function RootLayout() {
+  const a = await fetch('https://...') // Cached
+  const b = await fetch('https://...', { cache: 'no-store' }) // Not cached
+ 
+  // ...
+}
+Route Handlers
+
+GET functions in Route Handlers are no longer cached by default. To opt GET methods into caching, you can use a route config option such as export const dynamic = 'force-static' in your Route Handler file.
+
+app/api/route.js
+export const dynamic = 'force-static'
+ 
+export async function GET() {}
+Client-side Router Cache
+
+When navigating between pages via <Link> or useRouter, page segments are no longer reused from the client-side router cache. However, they are still reused during browser backward and forward navigation and for shared layouts.
+
+To opt page segments into caching, you can use the staleTimes config option:
+
+next.config.js
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  experimental: {
+    staleTimes: {
+      dynamic: 30,
+      static: 180,
+    },
+  },
+}
+ 
+module.exports = nextConfig
+
+Layouts and loading states are still cached and reused on navigation.
+
+next/font
+
+The @next/font package has been removed in favor of the built-in next/font. A codemod is available to safely and automatically rename your imports.
+
+app/layout.js
+// Before
+import { Inter } from '@next/font/google'
+ 
+// After
+import { Inter } from 'next/font/google'
+bundlePagesRouterDependencies
+
+experimental.bundlePagesExternals is now stable and renamed to bundlePagesRouterDependencies.
+
+next.config.js
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  // Before
+  experimental: {
+    bundlePagesExternals: true,
+  },
+ 
+  // After
+  bundlePagesRouterDependencies: true,
+}
+ 
+module.exports = nextConfig
+serverExternalPackages
+
+experimental.serverComponentsExternalPackages is now stable and renamed to serverExternalPackages.
+
+next.config.js
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  // Before
+  experimental: {
+    serverComponentsExternalPackages: ['package-name'],
+  },
+ 
+  // After
+  serverExternalPackages: ['package-name'],
+}
+ 
+module.exports = nextConfig
+Speed Insights
+
+Auto instrumentation for Speed Insights was removed in Next.js 15.
+
+To continue using Speed Insights, follow the Vercel Speed Insights Quickstart
+ guide.
+
+NextRequest Geolocation
+
+The geo and ip properties on NextRequest have been removed as these values are provided by your hosting provider. A codemod is available to automate this migration.
+
+If you are using Vercel, you can alternatively use the geolocation and ipAddress functions from `@vercel/functions
+ instead:
+
+middleware.ts
+import { geolocation } from '@vercel/functions'
+import type { NextRequest } from 'next/server'
+ 
+export function middleware(request: NextRequest) {
+  const { city } = geolocation(request)
+ 
+  // ...
+}
+middleware.ts
+import { ipAddress } from '@vercel/functions'
+import type { NextRequest } from 'next/server'
+ 
+export function middleware(request: NextRequest) {
+  const ip = ipAddress(request)
+ 
+  // ...
+}
+Previous
+Codemods
+Next
+Version 14
+
+Was this helpful?
+
+supported.
+Send
+Resources
+Docs
+Learn
+Showcase
+Blog
+Analytics
+Next.js Conf
+Previews
+More
+Next.js Commerce
+Contact Sales
+GitHub
+Releases
+Telemetry
+Governance
+About Vercel
+Next.js + Vercel
+Open Source Software
+GitHub
+X
+Legal
+Privacy Policy
+Cookie Preferences
+Subscribe to our newsletter
+
+Stay updated on new releases and features, guides, and case studies.
+
+Subscribe
+
+© 2024 Vercel, Inc.
